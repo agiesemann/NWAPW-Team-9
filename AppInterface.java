@@ -62,7 +62,9 @@ public class AppInterface implements ActionListener {
         	
         } else if (eventName.equals("Help")) {
         	// call Help method
-        	label.setText("");
+		Help output = new Help();
+        	String labelOutput = output.getHelp();
+        	label.setText(labelOutput);
         } else {
         	label.setText("Audio capture stopped.");
         	// call stop audio method
