@@ -2,12 +2,6 @@
  * Carrie Nguyen
  * 7/24/17
  */
-/* Mini Motivations
- * inspiring you to kick some academic butt
- * 
- * Carrie Nguyen
- * 6/2/17
- */
 
 import javax.swing.*;
 import java.awt.event.*;      
@@ -46,6 +40,7 @@ public class AppInterface implements ActionListener {
 
         /* Size and then display the frame. */
         frame.pack();
+	frame.setSize(512,512);
         frame.setVisible(true);
     }
     
