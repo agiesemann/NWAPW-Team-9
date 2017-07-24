@@ -11,10 +11,8 @@
 
 import javax.swing.*;
 import java.awt.event.*;      
-import java.util.Random;
 
 public class AppInterface implements ActionListener {
-	Random rand = new Random();
 	JFrame frame;
 	JPanel contentPane;
 	JLabel label;
