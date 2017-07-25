@@ -1,0 +1,14 @@
+/* Help 
+ * Carrie Nguyen
+ * 7/24/17
+ */
+
+public class Help {
+	public String getHelp() {
+		String helpInfo = "Welcome to Beginning Guitarists App.";
+		// add more user instructions here
+		return helpInfo;
+
+	}
+
+}
