@@ -1,94 +1,66 @@
-/* Guitarist App Interface
+ /* Guitar App Interface
  * Carrie Nguyen
- * 7/24/17
  */
-
 import javax.swing.*;
-import java.awt.event.*;      
-
-public class AppInterface implements ActionListener {
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+ 
+public class AppInterface {
 	JFrame frame;
-	JPanel contentPane;
-	JLabel label;
-	JButton button;
-
-    public AppInterface(){
-        /* Create and set up the frame */
+    JLabel label;
+ 
+    public static void main(String[] args) {
+        AppInterface gui = new AppInterface();
+        gui.go();
+    }
+ 
+    public void go(){
         frame = new JFrame("Beginning Guitarists App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        /* Create a content pane */
-        contentPane = new JPanel();
-
-		/* Create and add label */
-	    label = new JLabel("Welcome.");
-        contentPane.add(label);
-
-		/* Create and add button */
-        button = new JButton("Begin audio capture");
-    	button.setActionCommand("Begin audio capture");
-    	button.addActionListener(this);
-    	contentPane.add(button);
-    	
-    	button = new JButton("Help");
-    	button.setActionCommand("Help");
-    	button.addActionListener(this);
-    	contentPane.add(button);
-
-		/* Add content pane to frame */
-        frame.setContentPane(contentPane);
-
-        /* Size and then display the frame. */
-        frame.pack();
-	frame.setSize(512,512);
+ 
+        JButton startButton = new JButton("Begin audio capture");
+        startButton.addActionListener(new StartListener());
+ 
+        JButton stopButton = new JButton("Stop audio capture");
+        stopButton.addActionListener(new StopListener());
+        
+        JButton helpButton = new JButton("Help");
+        helpButton.addActionListener(new HelpListener());
+ 
+        label = new JLabel("Welcome",SwingConstants.CENTER);
+ 
+ 
+        frame.getContentPane().add(BorderLayout.SOUTH, helpButton);
+        frame.getContentPane().add(BorderLayout.EAST, startButton);
+        frame.getContentPane().add(BorderLayout.WEST, stopButton);
+        frame.getContentPane().add(BorderLayout.CENTER, label);
+        
+ 
+        frame.setSize(700, 500);
         frame.setVisible(true);
     }
-    
-    
-    /**
-     * Handle button click action event
-     * pre: none
-     * post: Clicked button has different text and label
-     * displays message depending on when the button was clicked.
-     */
-    public void actionPerformed(ActionEvent event) {
-        String eventName = event.getActionCommand();
-       
-        	if (eventName.equals("Begin audio capture")) {
-        		// call audio capture method
-        	label.setText("Capturing audio...");
-        	button.setText("Stop audio capture");
-        	button.setActionCommand("Stop audio capture");
-        	
-        } else if (eventName.equals("Help")) {
-        	// call Help method
-		Help output = new Help();
-        	String labelOutput = output.getHelp();
-        	label.setText(labelOutput);
-        } else {
-        	label.setText("Audio capture stopped.");
-        	// call stop audio method
+ 
+    class StartListener implements ActionListener{
+        public void actionPerformed(ActionEvent event){
+                label.setText("Beginning audio capture...");
         }
     }
-
-
-    /**
-     * Create and show the GUI.
-     */
-    private static void runGUI() {
-        JFrame.setDefaultLookAndFeelDecorated(true);
-
-        AppInterface greeting = new AppInterface();
+    
+    class StopListener implements ActionListener{
+    	public void actionPerformed(ActionEvent event){
+    		label.setText("Audio capture stopped.");
+    	}
     }
-     
-
-    public static void main(String[] args) {
-        /* Methods that create and show a GUI should be 
-           run from an event-dispatching thread */
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                runGUI();
-            }
-        });
+ 
+    class HelpListener implements ActionListener{
+        public void actionPerformed(ActionEvent event){
+        	// call Help method
+        	label.setText("");
+        	Help output = new Help();
+        	String labelOutput = output.getHelp();
+        	label.setText(labelOutput);
+        }
     }
 }
+ 
