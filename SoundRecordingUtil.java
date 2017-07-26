@@ -1,9 +1,24 @@
+
  
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+ 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.TargetDataLine;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.sound.sampled.*;
+ 
 /**
  * A utility class provides general functions for recording sound.
  * @author www.codejava.net
@@ -23,7 +38,7 @@ public class SoundRecordingUtil {
     AudioFormat getAudioFormat() {
         float sampleRate = 16000;
         int sampleSizeInBits = 8;
-        int channels = 1;
+        int channels = 2;
         boolean signed = true;
         boolean bigEndian = true;
         return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed,
@@ -38,17 +53,22 @@ public class SoundRecordingUtil {
     public void start() throws LineUnavailableException {
         format = getAudioFormat();
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-		
-		Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
-		Mixer mixer = AudioSystem.getMixer(mixerInfo[3]);
  
         // checks if system supports the data line
         if (!AudioSystem.isLineSupported(info)) {
             throw new LineUnavailableException(
                     "The system does not support the specified format.");
         }
+		
+		Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
+		
+		for (int i = 0; i < mixerInfo.length; i++) {
+			System.out.println(mixerInfo[i]);
+		}
+		
+		Mixer mixer = AudioSystem.getMixer(mixerInfo[3]);
  
-        audioLine = (TargetDataLine) mixer.getLine(info);
+        audioLine = (TargetDataLine)mixer.getLine(info);
  
         audioLine.open(format);
         audioLine.start();
@@ -58,16 +78,14 @@ public class SoundRecordingUtil {
  
         recordBytes = new ByteArrayOutputStream();
         isRunning = true;
- 
+		System.out.println("here");
+
         while (isRunning) {
             bytesRead = audioLine.read(buffer, 0, buffer.length);
             recordBytes.write(buffer, 0, bytesRead);
-			for (int i = 0; i < buffer.length; i++) {
-				System.out.print(buffer[i] + " ");
-			}
         }
 		
-		
+		System.out.println("here 2");
     }
  
     /**
@@ -78,9 +96,11 @@ public class SoundRecordingUtil {
         isRunning = false;
          
         if (audioLine != null) {
-            audioLine.drain();
+            audioLine.flush();
+			System.out.println("here 3");
             audioLine.close();
         }
+		
     }
  
     /**
@@ -88,4 +108,16 @@ public class SoundRecordingUtil {
      * @param wavFile The file to be saved.
      * @throws IOException if any I/O error occurs.
      */
+    public void save(File wavFile) throws IOException {
+		//System.out.println("here 4");
+        byte[] audioData = recordBytes.toByteArray();
+        ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
+        AudioInputStream audioInputStream = new AudioInputStream(bais, format,
+                audioData.length / format.getFrameSize());
+ 
+        AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, wavFile);
+ 
+        audioInputStream.close();
+        recordBytes.close();
+    }
 }

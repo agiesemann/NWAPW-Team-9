@@ -1,7 +1,13 @@
+
  
 import java.io.File;
 import java.io.IOException;
- 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import javax.sound.sampled.*;
+
 import javax.sound.sampled.LineUnavailableException;
  
 /**
@@ -10,10 +16,10 @@ import javax.sound.sampled.LineUnavailableException;
  *
  */
 public class TestSoundRecordingUtil {
-    private static final int RECORD_TIME = 60000;   // 60 seconds  
+    private static final int RECORD_TIME = 6000;   // 60 seconds  
      
     public static void main(String[] args) {
-        File wavFile = new File("E:/Test/Record.wav");
+        File wavFile = new File("C:\\Users\\Andres Giesemann\\NWAPW\\Audio Input Practice", "Test.wav");
          
         final SoundRecordingUtil recorder = new SoundRecordingUtil();
          
@@ -25,6 +31,7 @@ public class TestSoundRecordingUtil {
                     System.out.println("Start recording...");
                     recorder.start();
                 } catch (LineUnavailableException ex) {
+					//System.out.println("here");
                     ex.printStackTrace();
                     System.exit(-1);
                 }              
@@ -41,6 +48,8 @@ public class TestSoundRecordingUtil {
          
         try {
             recorder.stop();
+			System.out.println("here 4");
+            recorder.save(wavFile);
             System.out.println("STOPPED");
         } catch (IOException ex) {
             ex.printStackTrace();
