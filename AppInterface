@@ -1,10 +1,13 @@
- /* Guitar App Interface
- * Carrie Nguyen
+/* Guitar App Interface
+ *  Carrie Nguyen
  */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
+
  
 public class AppInterface {
 	JFrame frame;
@@ -22,8 +25,8 @@ public class AppInterface {
         JButton startButton = new JButton("Begin audio capture");
         startButton.addActionListener(new StartListener());
  
-        JButton stopButton = new JButton("Stop audio capture");
-        stopButton.addActionListener(new StopListener());
+        JButton resetButton = new JButton("Reset");
+        resetButton.addActionListener(new ResetListener());
         
         JButton helpButton = new JButton("Help");
         helpButton.addActionListener(new HelpListener());
@@ -33,7 +36,7 @@ public class AppInterface {
  
         frame.getContentPane().add(BorderLayout.SOUTH, helpButton);
         frame.getContentPane().add(BorderLayout.EAST, startButton);
-        frame.getContentPane().add(BorderLayout.WEST, stopButton);
+        frame.getContentPane().add(BorderLayout.WEST, resetButton);
         frame.getContentPane().add(BorderLayout.CENTER, label);
         
  
@@ -43,13 +46,20 @@ public class AppInterface {
  
     class StartListener implements ActionListener{
         public void actionPerformed(ActionEvent event){
+        	//call record audio method
                 label.setText("Beginning audio capture...");
+                //Timer timer = new Timer();
+              
+                TestSoundRecordingUtil output = new TestSoundRecordingUtil();
+                String labelOutput = output.getTestSoundRecordingUtil();
+                label.setText(labelOutput);
         }
     }
     
-    class StopListener implements ActionListener{
+    class ResetListener implements ActionListener{
     	public void actionPerformed(ActionEvent event){
-    		label.setText("Audio capture stopped.");
+    		//call reset method
+    		label.setText("Cleared");
     	}
     }
  
@@ -59,7 +69,10 @@ public class AppInterface {
         	label.setText("");
         	Help output = new Help();
         	String labelOutput = output.getHelp();
+        	label.setHorizontalAlignment(SwingConstants.CENTER);
+        	label.setVerticalAlignment(SwingConstants.CENTER);
         	label.setText(labelOutput);
+    
         }
     }
 }
