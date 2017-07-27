@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.sound.sampled.*;
+import java.util.*;
  
 /**
  * A utility class provides general functions for recording sound.
@@ -25,7 +26,7 @@ import javax.sound.sampled.*;
  *
  */
 public class SoundRecordingUtil {
-    private static final int BUFFER_SIZE = 4096;
+    private static final int BUFFER_SIZE = 4410;
     private ByteArrayOutputStream recordBytes;
     private TargetDataLine audioLine;
     private AudioFormat format;
@@ -36,9 +37,9 @@ public class SoundRecordingUtil {
      * Defines a default audio format used to record
      */
     AudioFormat getAudioFormat() {
-        float sampleRate = 16000;
+        float sampleRate = 44100;
         int sampleSizeInBits = 8;
-        int channels = 2;
+        int channels = 1;
         boolean signed = true;
         boolean bigEndian = true;
         return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed,
@@ -63,10 +64,13 @@ public class SoundRecordingUtil {
 		Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
 		
 		for (int i = 0; i < mixerInfo.length; i++) {
-			System.out.println(mixerInfo[i]);
+			System.out.println(i + ". " + mixerInfo[i]);
 		}
 		
-		Mixer mixer = AudioSystem.getMixer(mixerInfo[3]);
+		Scanner kb = new Scanner(System.in);
+		int mixNum = kb.nextInt();
+		
+		Mixer mixer = AudioSystem.getMixer(mixerInfo[mixNum]);
  
         audioLine = (TargetDataLine)mixer.getLine(info);
  
@@ -78,15 +82,21 @@ public class SoundRecordingUtil {
  
         recordBytes = new ByteArrayOutputStream();
         isRunning = true;
-		System.out.println("here");
+		
+		byte[] a2 = new byte[400];
+		byte[] g3 = new byte[224];
+		
+		//44100 Hz a2 is 110 Hz
 
         while (isRunning) {
             bytesRead = audioLine.read(buffer, 0, buffer.length);
             recordBytes.write(buffer, 0, bytesRead);
+			NoteID note = new NoteID();
+			note.noteID(110, buffer, 44100);
         }
 		
-		System.out.println("here 2");
     }
+	
  
     /**
      * Stop recording sound.
@@ -97,7 +107,6 @@ public class SoundRecordingUtil {
          
         if (audioLine != null) {
             audioLine.flush();
-			System.out.println("here 3");
             audioLine.close();
         }
 		
@@ -108,8 +117,7 @@ public class SoundRecordingUtil {
      * @param wavFile The file to be saved.
      * @throws IOException if any I/O error occurs.
      */
-    public void save(File wavFile) throws IOException {
-		//System.out.println("here 4");
+/*    public void save(File wavFile) throws IOException {
         byte[] audioData = recordBytes.toByteArray();
         ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
         AudioInputStream audioInputStream = new AudioInputStream(bais, format,
@@ -119,5 +127,5 @@ public class SoundRecordingUtil {
  
         audioInputStream.close();
         recordBytes.close();
-    }
+    }*/
 }
