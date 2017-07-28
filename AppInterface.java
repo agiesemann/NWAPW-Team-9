@@ -95,13 +95,11 @@ public class AppInterface implements ActionListener{
      */
     public class StartListener implements ActionListener{
         public void actionPerformed(ActionEvent event){
-        	//call prompter
-        	label.setText("");
-        	Prompt output = new Prompt();
-        	String labelOutput = output.Prompter();
-        	label.setHorizontalAlignment(SwingConstants.CENTER);
-        	label.setVerticalAlignment(SwingConstants.CENTER);
-        	label.setText(labelOutput);
+        	//call record audio method
+            label.setText("Beginning audio capture...");
+           //TestSoundRecordingUtil output = new TestSoundRecordingUtil();
+            String labelOutput = output.getTestSoundRecordingUtil();
+            label.setText(labelOutput);
         }
     }
     ///////// WORK ON RESET METHOD /////////
@@ -136,6 +134,7 @@ public class AppInterface implements ActionListener{
         	label.setText(labelOutput);
     	}
     }
+   
     
     /**
      * Get mixer choice from user
