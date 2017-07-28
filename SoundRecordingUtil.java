@@ -63,17 +63,7 @@ public class SoundRecordingUtil {
         }
 		
 		Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
-		/*
-		for (int i = 0; i < mixerInfo.length; i++) {
-			System.out.println(i + ". " + mixerInfo[i]);
-		}
-		
-		Scanner kb = new Scanner(System.in);
-		mixNum = kb.nextInt();*/
-		
-		
-		
-		
+
 		Mixer mixer = AudioSystem.getMixer(mixerInfo[mixNum]);
  
         audioLine = (TargetDataLine)mixer.getLine(info);
@@ -86,17 +76,24 @@ public class SoundRecordingUtil {
  
         recordBytes = new ByteArrayOutputStream();
         isRunning = true;
-		
-		byte[] a2 = new byte[400];
-		byte[] g3 = new byte[224];
-		
-		//44100 Hz a2 is 110 Hz
 
         while (isRunning) {
             bytesRead = audioLine.read(buffer, 0, buffer.length);
             recordBytes.write(buffer, 0, bytesRead);
 			NoteID note = new NoteID();
-			System.out.println(note.noteID(110, buffer, 44100));
+			if (note.noteID(82.41, buffer, 44100))
+				System.out.print("e");
+			else if (note.noteID(110, buffer, 44100))
+				System.out.print("a");
+			else if (note.noteID(146.83, buffer, 44100))
+				System.out.print("d");
+			else if (note.noteID(196, buffer, 44100))
+				System.out.print("g");
+			else if (note.noteID(246.94, buffer, 44100))
+				System.out.print("b");
+			else if (note.noteID(329.63, buffer, 44100))
+				System.out.print("e");
+
         }
 		
     }
@@ -119,21 +116,4 @@ public class SoundRecordingUtil {
         }
 		
     }
- 
-    /**
-     * Save recorded sound data into a .wav file format.
-     * @param wavFile The file to be saved.
-     * @throws IOException if any I/O error occurs.
-     */
-/*    public void save(File wavFile) throws IOException {
-        byte[] audioData = recordBytes.toByteArray();
-        ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
-        AudioInputStream audioInputStream = new AudioInputStream(bais, format,
-                audioData.length / format.getFrameSize());
- 
-        AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, wavFile);
- 
-        audioInputStream.close();
-        recordBytes.close();
-    }*/
 }
