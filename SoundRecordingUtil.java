@@ -1,5 +1,3 @@
-
- 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -30,6 +28,7 @@ public class SoundRecordingUtil {
     private ByteArrayOutputStream recordBytes;
     private TargetDataLine audioLine;
     private AudioFormat format;
+    private int mixNum;
  
     private boolean isRunning;
  
@@ -51,6 +50,8 @@ public class SoundRecordingUtil {
      * @throws LineUnavailableException if the system does not support the specified
      * audio format nor open the audio data line.
      */
+    
+    
     public void start() throws LineUnavailableException {
         format = getAudioFormat();
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -62,13 +63,16 @@ public class SoundRecordingUtil {
         }
 		
 		Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
-		
+		/*
 		for (int i = 0; i < mixerInfo.length; i++) {
 			System.out.println(i + ". " + mixerInfo[i]);
 		}
 		
 		Scanner kb = new Scanner(System.in);
-		int mixNum = kb.nextInt();
+		mixNum = kb.nextInt();*/
+		
+		
+		
 		
 		Mixer mixer = AudioSystem.getMixer(mixerInfo[mixNum]);
  
@@ -92,10 +96,14 @@ public class SoundRecordingUtil {
             bytesRead = audioLine.read(buffer, 0, buffer.length);
             recordBytes.write(buffer, 0, bytesRead);
 			NoteID note = new NoteID();
-			note.noteID(110, buffer, 44100);
+			System.out.println(note.noteID(110, buffer, 44100));
         }
 		
     }
+    
+    public void setMixerChoice(int mixerChoice){
+		mixNum = mixerChoice;
+	}
 	
  
     /**

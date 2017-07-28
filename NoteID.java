@@ -6,15 +6,15 @@ public class NoteID {
 	 *@param b The byte array to be analyzed
 	 *@param s The sample rate of the byte array
 	 */
-	public void noteID (double f, byte[] b, double s) {
+	public boolean noteID (double f, byte[] b, double s) {
 		int size = (int)(s/f);
 		byte[] x = new byte[size];
 		
-		int a = 0; //Used to reset position in x
+		int a = 0; //Used to reset position in x array
 		for (int i = 0; i < b.length; i++) {
 			if (a >= x.length)
 				a = 0;
-			x[a] += b[i];
+			x[a] += b[i]; 
 			a++;
 		}
 		int max = (int)x[0];
@@ -23,6 +23,8 @@ public class NoteID {
 			max = Math.max(max, x[i]);
 			min = Math.min(min, x[i]);
 		}
-		System.out.print(max - min + " ");
+		if (max - min > 230)
+			return true;
+		return false;
 	}
 }
