@@ -18,18 +18,13 @@ public class TestSoundRecordingUtil {
 
 	public String getTestSoundRecordingUtil() {
     final int RECORD_TIME = 20000;   
-     
-   // public static void main(String[] args) {
-        //File wavFile = new File("/Users/cuongnguyen/Desktop/TestSound", "Test.wav");
-         
-        //final SoundRecordingUtil recorder = new SoundRecordingUtil();
          
         // create a separate thread for recording
         Thread recordThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    System.out.println("Start recording...");
+                    System.out.println("Identifying...");
                     recorder.start();
                 } catch (LineUnavailableException ex) {
                     ex.printStackTrace();
@@ -49,12 +44,12 @@ public class TestSoundRecordingUtil {
         try {
             recorder.stop();
             //recorder.save(wavFile);
-            System.out.println("STOPPED");
+            System.out.println();
+            System.out.println("Stopped");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
          
-        System.out.println("DONE");
         return "recorded";
     }
  
