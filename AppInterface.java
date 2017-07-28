@@ -1,5 +1,5 @@
-/* Guitar App Interface
- *  Carrie Nguyen
+ /* Guitar App Interface
+ *  Team 9
  */
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Mixer;
@@ -7,8 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Timer;
-import java.util.TimerTask;
+//import java.util.Timer;
+//import java.util.TimerTask;
 
  
 public class AppInterface implements ActionListener{
@@ -30,6 +30,7 @@ public class AppInterface implements ActionListener{
         
         JPanel helpPanel = new JPanel();
         JPanel panel = new JPanel();
+        JPanel panel2 = new JPanel();
  
         JButton startButton = new JButton("Begin audio capture");
         startButton.setSize(100,200);
@@ -42,18 +43,20 @@ public class AppInterface implements ActionListener{
         JButton helpButton = new JButton("Help");
         helpButton.addActionListener(new HelpListener());
  
-        label = new JLabel("Welcome",SwingConstants.CENTER);
+        label = new JLabel("Welcome", SwingConstants.CENTER);
  
         panel.add(startButton);
         panel.add(resetButton);
         helpPanel.add(helpButton);
+        panel2.add(label);
         frame.getContentPane().add(BorderLayout.NORTH, helpPanel);
         frame.getContentPane().add(BorderLayout.SOUTH, panel);
+        frame.getContentPane().add(BorderLayout.CENTER, panel2);
         Container center = new Container();
         
         Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
 		center.setLayout(new GridLayout(mixerInfo.length+1, 1));
-		center.add(label);
+		//center.add(label);
 		JButton[] buttons = new JButton[mixerInfo.length];
 		for (int i = 0; i < mixerInfo.length; i++) {
 			buttons[i] = new JButton(i + ". "+mixerInfo[i]);
@@ -64,10 +67,10 @@ public class AppInterface implements ActionListener{
 		
 		}
 		
-		frame.getContentPane().add(BorderLayout.CENTER, center);
+		frame.getContentPane().add(BorderLayout.WEST, center);
         
         
-        frame.setSize(700, 500);
+        frame.setSize(900, 500);
         frame.setVisible(true);
     }
  
@@ -111,8 +114,9 @@ public class AppInterface implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton buttonPressed = (JButton)e.getSource();
+		//buttons.setVisible(false); FIX
+		buttonPressed.setVisible(true);
 		mixerChoice = Integer.parseInt(buttonPressed.getText().substring(0,1));
-		
 		output.recorder.setMixerChoice(mixerChoice);
 		
 	}
