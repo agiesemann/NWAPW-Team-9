@@ -23,7 +23,7 @@ public class NoteID {
 			max = Math.max(max, x[i]);
 			min = Math.min(min, x[i]);
 		}
-		if (max - min > 230)
+		if (max - min > 240)
 			return true;
 		return false;
 	}
