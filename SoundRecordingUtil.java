@@ -1,22 +1,13 @@
-import java.io.ByteArrayInputStream;
+
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
- 
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
 import javax.sound.sampled.*;
-import java.util.*;
+
  
 /**
  * A utility class provides general functions for recording sound.
@@ -57,17 +48,22 @@ public class SoundRecordingUtil {
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
  
         // checks if system supports the data line
-        if (!AudioSystem.isLineSupported(info)) {
-            throw new LineUnavailableException(
-                    "The system does not support the specified format.");
-        }
+        
 		
 		Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
-
+		
+		//boolean audioCheck = true;
+		//while (audioCheck) {
+		
 		Mixer mixer = AudioSystem.getMixer(mixerInfo[mixNum]);
- 
+		/*if (!AudioSystem.isLineSupported(mixer.getLineInfo())) {
+            throw new LineUnavailableException(
+                    "The system does not support the specified format.");
+        }*/
+
         audioLine = (TargetDataLine)mixer.getLine(info);
- 
+        
+		//}
         audioLine.open(format);
         audioLine.start();
  
@@ -81,7 +77,7 @@ public class SoundRecordingUtil {
             bytesRead = audioLine.read(buffer, 0, buffer.length);
             recordBytes.write(buffer, 0, bytesRead);
 			NoteID note = new NoteID();
-			if (note.noteID(82.41, buffer, 44100))
+			/*if (note.noteID(82.41, buffer, 44100))
 				System.out.print("e");
 			else if (note.noteID(110, buffer, 44100))
 				System.out.print("a");
@@ -92,7 +88,31 @@ public class SoundRecordingUtil {
 			else if (note.noteID(246.94, buffer, 44100))
 				System.out.print("b");
 			else if (note.noteID(329.63, buffer, 44100))
+				System.out.print("e");*/
+			if (note.noteID(110, buffer, 44100))
+				System.out.print("a");
+			else if (note.noteID(116.54, buffer, 44100))
+				System.out.print("a#");
+			else if (note.noteID(164.81, buffer, 44100))
 				System.out.print("e");
+			else if (note.noteID(123.47, buffer, 44100))
+				System.out.print("b");
+			else if (note.noteID(130.81, buffer, 44100))
+				System.out.print("c");
+			else if (note.noteID(138.59, buffer, 44100))
+				System.out.print("c#");
+			else if (note.noteID(146.83, buffer, 44100))
+				System.out.print("d");
+			else if (note.noteID(155.86, buffer, 44100))
+				System.out.print("d#");
+			else if (note.noteID(174.61, buffer, 44100))
+				System.out.print("f");
+			else if (note.noteID(185, buffer, 44100))
+				System.out.print("f#");
+			else if (note.noteID(196, buffer, 44100))
+				System.out.print("g");
+			else if (note.noteID(207.65, buffer, 44100))
+				System.out.print("g#");
 
         }
 		
