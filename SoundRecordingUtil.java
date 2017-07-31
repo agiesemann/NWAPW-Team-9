@@ -77,6 +77,12 @@ public class SoundRecordingUtil {
             bytesRead = audioLine.read(buffer, 0, buffer.length);
             recordBytes.write(buffer, 0, bytesRead);
 			NoteID note = new NoteID();
+			int max = 0;
+			for (int i = 0; i < buffer.length; i++) {
+				max = Math.max(buffer[i], max);
+			}
+			if (max > 10)
+			System.out.println(note.noteID(buffer) + " ");
 			/*if (note.noteID(82.41, buffer, 44100))
 				System.out.print("e");
 			else if (note.noteID(110, buffer, 44100))
@@ -89,31 +95,6 @@ public class SoundRecordingUtil {
 				System.out.print("b");
 			else if (note.noteID(329.63, buffer, 44100))
 				System.out.print("e");*/
-			if (note.noteID(110, buffer, 44100))
-				System.out.print("a");
-			else if (note.noteID(116.54, buffer, 44100))
-				System.out.print("a#");
-			else if (note.noteID(164.81, buffer, 44100))
-				System.out.print("e");
-			else if (note.noteID(123.47, buffer, 44100))
-				System.out.print("b");
-			else if (note.noteID(130.81, buffer, 44100))
-				System.out.print("c");
-			else if (note.noteID(138.59, buffer, 44100))
-				System.out.print("c#");
-			else if (note.noteID(146.83, buffer, 44100))
-				System.out.print("d");
-			else if (note.noteID(155.86, buffer, 44100))
-				System.out.print("d#");
-			else if (note.noteID(174.61, buffer, 44100))
-				System.out.print("f");
-			else if (note.noteID(185, buffer, 44100))
-				System.out.print("f#");
-			else if (note.noteID(196, buffer, 44100))
-				System.out.print("g");
-			else if (note.noteID(207.65, buffer, 44100))
-				System.out.print("g#");
-
         }
 		
     }
@@ -136,4 +117,38 @@ public class SoundRecordingUtil {
         }
 		
     }
+	public String tune(byte[] b, double f, double fSharp, double fFlat) {
+		byte[] tuned = new byte[(int)(44100/f)];
+		byte[] flat = new byte[(int)(44100/fFlat)];
+		byte[] sharp = new byte[(int)(44100/fSharp)];
+		
+		int tunedDiff = fillAndMaxMinDiff(tuned, b);
+		int flatDiff = fillAndMaxMinDiff(flat, b);
+		int sharpDiff = fillAndMaxMinDiff(sharp, b);
+		
+		if (flatDiff > tunedDiff && flatDiff > sharpDiff)
+			return "too low";
+		else if (tunedDiff > flatDiff && tunedDiff > sharpDiff)
+			return "in tune";
+		else if (sharpDiff > tunedDiff && sharpDiff > flatDiff)
+			return "too high";
+		return "in tune";
+	}
+	public int fillAndMaxMinDiff(byte[] a, byte[] b) {
+		int max = a[0];
+		int min = a[0];
+		int x = 0;
+		for(int i = 0; i < b.length; i++) {
+			if (x >= a.length)
+				x = 0;
+			a[x] += b[i];
+			x++;
+		}
+		
+		for (int i = 0; i < a.length; i++) {
+			max = Math.max(a[i], max);
+			min = Math.min(a[i], min);
+		}
+		return max-min;
+	}	
 }
