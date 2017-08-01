@@ -3,18 +3,28 @@
  */
 
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.awt.Font;
 
 public class AppInterface implements ActionListener{
 	JFrame frame;
-	JFrame frame2;
-    JLabel label;
+    JLabel label1;
+    JLabel label2;
+    JLabel imageLabel;
+    JPanel utilPanel = new JPanel();
+    JPanel outputPanel = new JPanel();
+    JPanel imagePanel = new JPanel();
     int mixerChoice = 0;
+    
     TestSoundRecordingUtil output = new TestSoundRecordingUtil();
+    JButton tuneButton = new JButton("Tune");
+    JButton startButton = new JButton("Start");
     
 
     public static void main(String[] args) {
@@ -29,15 +39,7 @@ public class AppInterface implements ActionListener{
         
     	frame = new JFrame("Beginning Guitarists App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame2 = new JFrame("Fret");
-        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        JPanel helpPanel = new JPanel();
-        JPanel panel = new JPanel();
-        JPanel panel2 = new JPanel();
-        JPanel imagePanel = new JPanel();
- 
-        JButton startButton = new JButton("Begin audio capture");
+       
         startButton.addActionListener(new StartListener());
  
         JButton resetButton = new JButton("Reset");
@@ -46,26 +48,41 @@ public class AppInterface implements ActionListener{
         JButton helpButton = new JButton("Help");
         helpButton.addActionListener(new HelpListener());
         
-        JButton promptButton = new JButton("Note Prompt");
-        promptButton.addActionListener(new PromptListener());
+        tuneButton.addActionListener(new TunerListener());
  
-        label = new JLabel("Welcome", SwingConstants.CENTER);
-    	ImageIcon icon = new ImageIcon("fret.jpg");
-    	JLabel imagelabel = new JLabel(icon);
+        label1 = new JLabel();
+        		label1.setHorizontalAlignment(SwingConstants.CENTER);
+        		label1.setVerticalAlignment(SwingConstants.CENTER);
+        	     label1.setText("This is Label1");
+        label2 = new JLabel();
+        		Help output = new Help();
+        		String labelOutput = output.getHelp();
+        		label2.setHorizontalAlignment(SwingConstants.CENTER);
+        		label2.setVerticalAlignment(SwingConstants.CENTER);
+        		label2.setText(labelOutput);
+        		Font bigFont = new Font("sansserif",Font.PLAIN,16);
+        		label2.setFont(bigFont);
+        	
+        ImageIcon testImage = new ImageIcon("musicNotes.png");
+        imageLabel = new JLabel();
+        	imageLabel.setIcon(testImage);
     	
         // add buttons and labels to panels 
-        panel.add(startButton);
-        panel.add(resetButton);
-        helpPanel.add(helpButton);
-        helpPanel.add(promptButton);
-        panel2.add(label);
-        imagePanel.add(imagelabel);
+        utilPanel.add(helpButton);
+        utilPanel.add(startButton);
+        utilPanel.add(resetButton);
+        utilPanel.add(tuneButton);
+        //utilPanel.add(promptButton);
+        outputPanel.setLayout(new BoxLayout(outputPanel, BoxLayout.Y_AXIS));
+        outputPanel.add(label1);
+        //outputPanel.add(Box.createVerticalGlue());
+        outputPanel.add(label2);
+        imagePanel.add(imageLabel);
         
         // add panels to frame
-        frame.getContentPane().add(BorderLayout.NORTH, helpPanel);
-        frame.getContentPane().add(BorderLayout.SOUTH, panel);
-        frame.getContentPane().add(BorderLayout.CENTER, panel2);
-        frame2.getContentPane().add(BorderLayout.CENTER, imagePanel);
+        frame.getContentPane().add(BorderLayout.SOUTH, utilPanel);
+        frame.getContentPane().add(BorderLayout.CENTER, outputPanel);
+        frame.getContentPane().add(BorderLayout.EAST, imagePanel);
         Container center = new Container();
         
         // create mixer buttons
@@ -84,10 +101,8 @@ public class AppInterface implements ActionListener{
 		frame.getContentPane().add(BorderLayout.WEST, center);
         
         
-        frame.setSize(900, 500);
+        frame.setSize(1500, 500);
         frame.setVisible(true);
-        frame2.setSize(900, 500);
-        frame2.setVisible(true);
     }
  
     /**
@@ -95,57 +110,117 @@ public class AppInterface implements ActionListener{
      */
     public class StartListener implements ActionListener{
         public void actionPerformed(ActionEvent event){
-        	//call record audio method
-            label.setText("Beginning audio capture...");
-           //TestSoundRecordingUtil output = new TestSoundRecordingUtil();
-            String labelOutput = output.getTestSoundRecordingUtil();
-            label.setText(labelOutput);
+        	if (label1.getText() == " ") {
+        		label1.setText("Select a mixer to begin.");
+        	} else {
+        		//call record audio method
+        		 SoundRecordingUtil noteIDUtil = new SoundRecordingUtil();
+        		             		noteIDUtil.setMixerChoice(mixerChoice);
+        		             		Thread noteIDThread = new Thread(new Runnable() {
+        		             			public void run() {
+        		             				try {
+        		 								noteIDUtil.start();
+        		 							} catch (LineUnavailableException e) {
+        		 								// TODO Auto-generated catch block
+        		 								e.printStackTrace();
+        		 							}
+        		         	    		}
+        		         	    	});
+        		             		if (startButton.getText().equals("Start")) {
+        		             			noteIDThread.start();
+        		             			startButton.setText("Stop");
+        		             		}
+        		             		else if (startButton.getText().equals("Stop")) {
+        		             			try {
+        		 							noteIDUtil.stop();
+        		 						} catch (IOException e) {
+        		 							// TODO Auto-generated catch block
+        		 							e.printStackTrace();
+        		 						}
+        		             			startButton.setText("Start");
+        		             		}
+        		   
+                label1.setText("Play: ");
+                label1.setHorizontalAlignment(SwingConstants.CENTER);
+                label1.setVerticalAlignment(SwingConstants.CENTER);
+                Prompt imageOutput = new Prompt();
+                ImageIcon icon = imageOutput.ImagePrompt();
+                imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                imageLabel.setVerticalAlignment(SwingConstants.CENTER);
+                imageLabel.setIcon(icon);
+            		imagePanel.add(imageLabel);
+     
+        		}
         }
     }
     ///////// WORK ON RESET METHOD /////////
     class ResetListener implements ActionListener{
     	public void actionPerformed(ActionEvent event){
     		//call reset method
-    		label.setText("Cleared");
+    		label1.setText("Cleared");
+    		label1.setHorizontalAlignment(SwingConstants.CENTER);
+        	label1.setVerticalAlignment(SwingConstants.CENTER);
+    		imageLabel.setVisible(false);
     	}
     }
  
     class HelpListener implements ActionListener{
         public void actionPerformed(ActionEvent event){
-        	// call Help 
-        	label.setText("");
+        	// call Help method
+        	label1.setText("");
+        	imageLabel.setVisible(false);
         	Help output = new Help();
         	String labelOutput = output.getHelp();
-        	label.setHorizontalAlignment(SwingConstants.CENTER);
-        	label.setVerticalAlignment(SwingConstants.CENTER);
-        	label.setText(labelOutput);
+        	label2.setHorizontalAlignment(SwingConstants.CENTER);
+        	label2.setVerticalAlignment(SwingConstants.CENTER);
+        	label2.setText(labelOutput);
     
         }
     }
     
-    class PromptListener implements ActionListener{
-    	public void actionPerformed(ActionEvent event) {
-    		// call prompter
-    		label.setText("");
-        	Prompt output = new Prompt();
-        	String labelOutput = output.Prompter();
-        	label.setHorizontalAlignment(SwingConstants.CENTER);
-        	label.setVerticalAlignment(SwingConstants.CENTER);
-        	label.setText(labelOutput);
-    	}
-    }
-   
+    class TunerListener implements ActionListener {
+       	SoundRecordingUtil tuner = new SoundRecordingUtil();
+       	public void actionPerformed(ActionEvent event) {
+       		tuner.setMixerChoice(mixerChoice);
+       		Thread tuneThread = new Thread(new Runnable() {
+       			public void run() {
+       				tuner.runTuner();
+    	    		}
+    	    	});
+       		if (tuneButton.getText().equals("Tune")) {
+       			tuneThread.start();
+       			tuneButton.setText("Next String");
+       		}
+       		else {
+       			tuner.StringNo++;
+       		}
+       		if (tuner.StringNo > 5) {
+    				try {
+    					tuner.stop();
+    				} catch (IOException e) {
+    					e.printStackTrace();
+    				}
+    				tuneButton.setText("Tune");
+    				tuner.StringNo = 0;
+       		}
+       		
+       	}
+       }
     
     /**
      * Get mixer choice from user
      */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JButton buttonPressed = (JButton)e.getSource();
-		// buttons.setVisible(false); FIX
+		JButton buttonPressed = (JButton)e.getSource(); 
 		buttonPressed.setVisible(true);
 		mixerChoice = Integer.parseInt(buttonPressed.getText().substring(0,1));
 		output.recorder.setMixerChoice(mixerChoice);
+		label1.setText(buttonPressed.getText() + " selected. Ready to record.");
+		
 		
 	}
 }
+
+
+

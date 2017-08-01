@@ -65,7 +65,11 @@ public class SoundRecordingUtil {
         audioLine = (TargetDataLine)mixer.getLine(info);
         
 		//}
-        audioLine.open(format);
+        try {
+        	audioLine.open(format);
+        } catch (LineUnavailableException ex) {
+        	ex.printStackTrace();
+        }
         audioLine.start();
  
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -78,32 +82,12 @@ public class SoundRecordingUtil {
             bytesRead = audioLine.read(buffer, 0, buffer.length);
             recordBytes.write(buffer, 0, bytesRead);
 			NoteID note = new NoteID();
-			/*int max = 0;
+			int max = 0;
 			for (int i = 0; i < buffer.length; i++) {
 				max = Math.max(buffer[i], max);
 			}
 			if (max > 10)
-			System.out.println(note.noteID(buffer) + " ");*/
-			/*if (note.noteID(82.41, buffer, 44100))
-				System.out.print("e");
-			else if (note.noteID(110, buffer, 44100))
-				System.out.print("a");
-			else if (note.noteID(146.83, buffer, 44100))
-				System.out.print("d");
-			else if (note.noteID(196, buffer, 44100))
-				System.out.print("g");
-			else if (note.noteID(246.94, buffer, 44100))
-				System.out.print("b");
-			else if (note.noteID(329.63, buffer, 44100))
-				System.out.print("e");*/
-					//System.out.println("E " + tune(buffer, 82.41, 87.31, 77.78));
-					//System.out.println("a " + tune(buffer, 110.00, 116.54, 103.83));
-					//System.out.println("d " + tune(buffer, 146.83, 155.56, 138.59));
-					//System.out.println("g " + tune(buffer, 196.00, 207.65, 185.00));
-					//System.out.println("b " + tune(buffer, 246.94, 261.63, 233.08));
-					//System.out.println("e " + tune(buffer, 329.63, 349.23, 311.13));
-					
-				
+				System.out.println(note.noteID(buffer) + " ");
         }
 		
     }
