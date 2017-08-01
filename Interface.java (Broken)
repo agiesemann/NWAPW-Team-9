@@ -72,6 +72,7 @@ public class Interface extends javax.swing.JFrame implements ActionListener {
 			System.out.println(i + ". " + mixerInfo[i]);
 		}
         
+	// SOUTH BUTTON PANEL
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -99,7 +100,7 @@ public class Interface extends javax.swing.JFrame implements ActionListener {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         
-        
+     // WEST BUTTON PANEL  
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -113,6 +114,7 @@ public class Interface extends javax.swing.JFrame implements ActionListener {
             .addComponent(center)
         );
 
+     // EAST DISPLAY PANEL
         jLabel1.setText("Welcome");
         ImageIcon welcomeImage = new ImageIcon("musicNotes.png");
         imageLabel = new JLabel(welcomeImage);
@@ -217,20 +219,6 @@ public class Interface extends javax.swing.JFrame implements ActionListener {
     /**
      * Action listeners respond to button events
      */
-    
-    
-    /**
-     * Get mixer choice from user
-     */
-	@Override
-	public void actionPerformed(ActionEvent evt) {
-		jButton1 buttonPressed = (JButton)e.getSource(); 
-		buttonPressed.setVisible(true);
-		mixerChoice = Integer.parseInt(buttonPressed.getText().substring(0,1));
-		output.recorder.setMixerChoice(mixerChoice);
-		
-	}
-	
     public class RecordListener implements ActionListener{
         public void actionPerformed(ActionEvent event){
         	//call record audio method
@@ -280,6 +268,18 @@ public class Interface extends javax.swing.JFrame implements ActionListener {
  
     	}
     }
-   
+    
+    // MIXER CHOICE CANNOT BE RESOLVED TO A VARIABLE ISSUE //
+    /**
+     * Get mixer choice from user
+     */
+	@Override
+	public void actionPerformed(ActionEvent evt) {
+		JButton buttonPressed = (JButton)evt.getSource(); 
+		buttonPressed.setVisible(true);
+		mixerChoice = Integer.parseInt(buttonPressed.getText().substring(0,1));
+		output.recorder.setMixerChoice(mixerChoice);
+		
+	} 
    
 }
