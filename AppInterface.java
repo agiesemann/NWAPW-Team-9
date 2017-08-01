@@ -3,6 +3,7 @@
  */
 
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.swing.*;
 import java.awt.*;
@@ -16,10 +17,14 @@ public class AppInterface implements ActionListener{
     JLabel label1;
     JLabel label2;
     JLabel imageLabel;
+    JPanel utilPanel = new JPanel();
+    JPanel outputPanel = new JPanel();
+    JPanel imagePanel = new JPanel();
     int mixerChoice = 0;
     
     TestSoundRecordingUtil output = new TestSoundRecordingUtil();
     JButton tuneButton = new JButton("Tune");
+    JButton startButton = new JButton("Start");
     
 
     public static void main(String[] args) {
@@ -34,12 +39,7 @@ public class AppInterface implements ActionListener{
         
     	frame = new JFrame("Beginning Guitarists App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        JPanel utilPanel = new JPanel();
-        JPanel outputPanel = new JPanel();
-        JPanel imagePanel = new JPanel();
- 
-        JButton startButton = new JButton("Start");
+       
         startButton.addActionListener(new StartListener());
  
         JButton resetButton = new JButton("Reset");
@@ -47,9 +47,6 @@ public class AppInterface implements ActionListener{
         
         JButton helpButton = new JButton("Help");
         helpButton.addActionListener(new HelpListener());
-        
-        JButton promptButton = new JButton("Note Prompt");
-        promptButton.addActionListener(new PromptListener());
         
         tuneButton.addActionListener(new TunerListener());
  
@@ -71,11 +68,11 @@ public class AppInterface implements ActionListener{
         	imageLabel.setIcon(testImage);
     	
         // add buttons and labels to panels 
+        utilPanel.add(helpButton);
         utilPanel.add(startButton);
         utilPanel.add(resetButton);
-        utilPanel.add(helpButton);
         utilPanel.add(tuneButton);
-        utilPanel.add(promptButton);
+        //utilPanel.add(promptButton);
         outputPanel.setLayout(new BoxLayout(outputPanel, BoxLayout.Y_AXIS));
         outputPanel.add(label1);
         //outputPanel.add(Box.createVerticalGlue());
@@ -117,10 +114,42 @@ public class AppInterface implements ActionListener{
         		label1.setText("Select a mixer to begin.");
         	} else {
         		//call record audio method
-                label1.setText("Beginning audio capture...");
-               //TestSoundRecordingUtil output = new TestSoundRecordingUtil();
-                String labelOutput = output.getTestSoundRecordingUtil();
-                label1.setText(labelOutput);
+        		 SoundRecordingUtil noteIDUtil = new SoundRecordingUtil();
+        		             		noteIDUtil.setMixerChoice(mixerChoice);
+        		             		Thread noteIDThread = new Thread(new Runnable() {
+        		             			public void run() {
+        		             				try {
+        		 								noteIDUtil.start();
+        		 							} catch (LineUnavailableException e) {
+        		 								// TODO Auto-generated catch block
+        		 								e.printStackTrace();
+        		 							}
+        		         	    		}
+        		         	    	});
+        		             		if (startButton.getText().equals("Start")) {
+        		             			noteIDThread.start();
+        		             			startButton.setText("Stop");
+        		             		}
+        		             		else if (startButton.getText().equals("Stop")) {
+        		             			try {
+        		 							noteIDUtil.stop();
+        		 						} catch (IOException e) {
+        		 							// TODO Auto-generated catch block
+        		 							e.printStackTrace();
+        		 						}
+        		             			startButton.setText("Start");
+        		             		}
+        		   
+                label1.setText("Play: ");
+                label1.setHorizontalAlignment(SwingConstants.CENTER);
+                label1.setVerticalAlignment(SwingConstants.CENTER);
+                Prompt imageOutput = new Prompt();
+                ImageIcon icon = imageOutput.ImagePrompt();
+                imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                imageLabel.setVerticalAlignment(SwingConstants.CENTER);
+                imageLabel.setIcon(icon);
+            		imagePanel.add(imageLabel);
+     
         		}
         }
     }
@@ -137,35 +166,18 @@ public class AppInterface implements ActionListener{
  
     class HelpListener implements ActionListener{
         public void actionPerformed(ActionEvent event){
-        	// call Help 
-        	
+        	// call Help method
         	label1.setText("");
         	imageLabel.setVisible(false);
         	Help output = new Help();
         	String labelOutput = output.getHelp();
-        	label1.setHorizontalAlignment(SwingConstants.CENTER);
-        	label1.setVerticalAlignment(SwingConstants.CENTER);
-        	label1.setText(labelOutput);
+        	label2.setHorizontalAlignment(SwingConstants.CENTER);
+        	label2.setVerticalAlignment(SwingConstants.CENTER);
+        	label2.setText(labelOutput);
     
         }
     }
     
-    class PromptListener implements ActionListener{
-    	public void actionPerformed(ActionEvent event) {
-        	// call image prompter
-        	label1.setText("Play: ");
-        	label1.setHorizontalAlignment(SwingConstants.CENTER);
-        	label1.setVerticalAlignment(SwingConstants.CENTER);
-        	Prompt imageOutput = new Prompt();
-        	ImageIcon icon = imageOutput.ImagePrompt();
-        	//imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        	//imageLabel.setVerticalAlignment(SwingConstants.CENTER);
-        	imageLabel.setIcon(icon);
-            frame.getContentPane().add(BorderLayout.EAST, imageLabel);
- 
-    		}
-    }
-   
     class TunerListener implements ActionListener {
        	SoundRecordingUtil tuner = new SoundRecordingUtil();
        	public void actionPerformed(ActionEvent event) {
@@ -209,4 +221,6 @@ public class AppInterface implements ActionListener{
 		
 	}
 }
+
+
 
