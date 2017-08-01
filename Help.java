@@ -1,0 +1,25 @@
+/* Help 
+ * Team 9
+ * 7/24/17
+ */
+
+public class Help {
+	public String getHelp() {
+		String helpInfo = "<html> Welcome to the Beginning Guitar App <BR>"
+				+ "<BR>"
+				+ "1. Choose a mixer by clicking one of the buttons on the left. <BR>"
+				+ "<BR>"
+				+ "2. Click \"Note Prompt \" to receive a note to play. <BR>"
+				+ "<BR>"
+				+ "3. To record sound, click \"Begin audio capture\" and play the note.<BR>"
+				+ "<BR>"
+				+ "4. The note played will be identified and displayed. <BR>"
+				+ "<BR>"
+				+ "5. Have fun! <html>";
+
+		// add more user instructions here
+		return helpInfo;
+
+	}
+
+}
