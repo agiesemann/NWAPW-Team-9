@@ -2,6 +2,7 @@
  *  Team 9
  */
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,7 @@ public class AppInterface implements ActionListener{
     int mixerChoice = 0;
     TestSoundRecordingUtil output = new TestSoundRecordingUtil();
     JButton tuneButton = new JButton("Tune");
+    JButton startButton = new JButton("Begin audio capture");
     
  
     public static void main(String[] args) {
@@ -34,7 +36,7 @@ public class AppInterface implements ActionListener{
         JPanel panel = new JPanel();
         JPanel panel2 = new JPanel();
  
-        JButton startButton = new JButton("Begin audio capture");
+        
         startButton.setSize(100,200);
         startButton.addActionListener(new StartListener());
  
@@ -83,8 +85,34 @@ public class AppInterface implements ActionListener{
         	//call record audio method
                 label.setText("Beginning audio capture...");
                 //TestSoundRecordingUtil output = new TestSoundRecordingUtil();
-                String labelOutput = output.getTestSoundRecordingUtil();
-                label.setText(labelOutput);
+                //String labelOutput = output.getTestSoundRecordingUtil();
+               
+                SoundRecordingUtil noteIDUtil = new SoundRecordingUtil();
+            		noteIDUtil.setMixerChoice(mixerChoice);
+            		Thread noteIDThread = new Thread(new Runnable() {
+            			public void run() {
+            				try {
+								noteIDUtil.start();
+							} catch (LineUnavailableException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+        	    		}
+        	    	});
+            		if (startButton.getText().equals("Begin audio capture")) {
+            			noteIDThread.start();
+            			startButton.setText("Stop");
+            		}
+            		else if (startButton.getText().equals("Stop")) {
+            			try {
+							noteIDUtil.stop();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+            			startButton.setText("Begin audio capture");
+            		}
+            	label.setText("Done");	
         }
     }
     
