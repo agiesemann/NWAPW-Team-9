@@ -20,6 +20,7 @@ public class SoundRecordingUtil {
     private TargetDataLine audioLine;
     private AudioFormat format;
     private int mixNum;
+    int StringNo;
  
     private boolean isRunning;
  
@@ -77,12 +78,12 @@ public class SoundRecordingUtil {
             bytesRead = audioLine.read(buffer, 0, buffer.length);
             recordBytes.write(buffer, 0, bytesRead);
 			NoteID note = new NoteID();
-			int max = 0;
+			/*int max = 0;
 			for (int i = 0; i < buffer.length; i++) {
 				max = Math.max(buffer[i], max);
 			}
 			if (max > 10)
-			System.out.println(note.noteID(buffer) + " ");
+			System.out.println(note.noteID(buffer) + " ");*/
 			/*if (note.noteID(82.41, buffer, 44100))
 				System.out.print("e");
 			else if (note.noteID(110, buffer, 44100))
@@ -95,6 +96,14 @@ public class SoundRecordingUtil {
 				System.out.print("b");
 			else if (note.noteID(329.63, buffer, 44100))
 				System.out.print("e");*/
+					//System.out.println("E " + tune(buffer, 82.41, 87.31, 77.78));
+					//System.out.println("a " + tune(buffer, 110.00, 116.54, 103.83));
+					//System.out.println("d " + tune(buffer, 146.83, 155.56, 138.59));
+					//System.out.println("g " + tune(buffer, 196.00, 207.65, 185.00));
+					//System.out.println("b " + tune(buffer, 246.94, 261.63, 233.08));
+					//System.out.println("e " + tune(buffer, 329.63, 349.23, 311.13));
+					
+				
         }
 		
     }
@@ -117,6 +126,53 @@ public class SoundRecordingUtil {
         }
 		
     }
+    
+    public void runTuner() {
+    	format = getAudioFormat();
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+		Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
+		Mixer mixer = AudioSystem.getMixer(mixerInfo[mixNum]);
+
+		try {
+			audioLine = (TargetDataLine)mixer.getLine(info);
+		} catch (LineUnavailableException ex) {
+			ex.printStackTrace();
+		}
+     
+        try {
+        	audioLine.open(format);
+        } catch (LineUnavailableException ex) {
+        	ex.printStackTrace();
+        }
+        audioLine.start();
+ 
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = 0;
+ 
+        recordBytes = new ByteArrayOutputStream();
+        isRunning = true;
+
+        while (isRunning) {
+            bytesRead = audioLine.read(buffer, 0, buffer.length);
+            recordBytes.write(buffer, 0, bytesRead);
+			NoteID note = new NoteID();
+			if (StringNo == 0)
+				System.out.println("E " + tune(buffer, 82.41, 87.31, 77.78));
+			else if (StringNo == 1)
+				System.out.println("a " + tune(buffer, 110.00, 116.54, 103.83));
+			else if (StringNo == 2)
+				System.out.println("d " + tune(buffer, 146.83, 155.56, 138.59));
+			else if (StringNo == 3)
+				System.out.println("g " + tune(buffer, 196.00, 207.65, 185.00));
+			else if (StringNo == 4)
+				System.out.println("b " + tune(buffer, 246.94, 261.63, 233.08));
+			else if (StringNo == 5)
+				System.out.println("e " + tune(buffer, 329.63, 349.23, 311.13));
+					
+				
+        }
+    	
+    }
 	public String tune(byte[] b, double f, double fSharp, double fFlat) {
 		byte[] tuned = new byte[(int)(44100/f)];
 		byte[] flat = new byte[(int)(44100/fFlat)];
@@ -126,13 +182,13 @@ public class SoundRecordingUtil {
 		int flatDiff = fillAndMaxMinDiff(flat, b);
 		int sharpDiff = fillAndMaxMinDiff(sharp, b);
 		
-		if (flatDiff > tunedDiff && flatDiff > sharpDiff)
-			return "too low";
-		else if (tunedDiff > flatDiff && tunedDiff > sharpDiff)
+		if (tunedDiff > flatDiff && tunedDiff > sharpDiff && tunedDiff > 250)
 			return "in tune";
-		else if (sharpDiff > tunedDiff && sharpDiff > flatDiff)
+		else if (flatDiff > sharpDiff)
+			return "too low";
+		else if (sharpDiff > flatDiff)
 			return "too high";
-		return "in tune";
+		return "";
 	}
 	public int fillAndMaxMinDiff(byte[] a, byte[] b) {
 		int max = a[0];
