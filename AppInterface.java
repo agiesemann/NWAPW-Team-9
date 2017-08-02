@@ -75,9 +75,9 @@ public class AppInterface implements ActionListener{
         		Font bigFont = new Font("sansserif",Font.PLAIN,16);
         		label2.setFont(bigFont);
         	
-        ImageIcon testImage = new ImageIcon("musicNotes.png"); // TEST
+        //ImageIcon testImage = new ImageIcon("musicNotes.png"); // TEST
         imageLabel = new JLabel(); 
-        	imageLabel.setIcon(testImage); 
+        	//imageLabel.setIcon(testImage); 
     	
         // add buttons and labels to panels 
         utilPanel.add(helpButton);
