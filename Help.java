@@ -9,16 +9,21 @@ public class Help {
 				+ "<BR>"
 				+ "1. Choose a mixer by clicking one of the buttons on the left. <BR>"
 				+ "<BR>"
-				+ "2. Click \"Note Prompt \" to receive a note to play. <BR>"
+				+ "2. Click \"Start \" to receive a note to play. <BR>"
 				+ "<BR>"
-				+ "3. To record sound, click \"Begin audio capture\" and play the note.<BR>"
+				+ "3. Play the note as prompted onscreen.<BR>"
 				+ "<BR>"
-				+ "4. The note played will be identified and displayed. <BR>"
+				+ "4. The note you play will be identified and displayed. <BR>"
 				+ "<BR>"
-				+ "5. Have fun! <html>";
+				+ "5. Click \"Reset \" to clear the screen. Select a mixer and press start to begin again. <BR>"
+				+ "<BR>"
+				+ "6. To use the tuner, click \"Tune \" to begin. Tune the first string according to the output onscreen "
+				+ "and then click \"Next String\" to tune the next string on the guitar. <BR>"
+				+ "<BR>"
+				+ "7. Have fun! <html>";
 
 		// add more user instructions here
-		return helpInfo;
+	 return helpInfo;
 
 	}
 
