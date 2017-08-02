@@ -53,7 +53,7 @@ public class AppInterface implements ActionListener{
         label1 = new JLabel();
         		label1.setHorizontalAlignment(SwingConstants.CENTER);
         		label1.setVerticalAlignment(SwingConstants.CENTER);
-        	    //label1.setText("This is Label1");
+        	    //label1.setText("This is Label1"); // TEST
         label2 = new JLabel();
         		Help output = new Help();
         		String labelOutput = output.getHelp();
@@ -63,9 +63,9 @@ public class AppInterface implements ActionListener{
         		Font bigFont = new Font("sansserif",Font.PLAIN,16);
         		label2.setFont(bigFont);
         	
-        ImageIcon testImage = new ImageIcon("musicNotes.png");
-        imageLabel = new JLabel();
-        	imageLabel.setIcon(testImage);
+        ImageIcon testImage = new ImageIcon("musicNotes.png"); // TEST
+        imageLabel = new JLabel(); 
+        	imageLabel.setIcon(testImage); 
     	
         // add buttons and labels to panels 
         utilPanel.add(helpButton);
@@ -74,9 +74,11 @@ public class AppInterface implements ActionListener{
         utilPanel.add(tuneButton);
        
         outputPanel.setLayout(new BoxLayout(outputPanel, BoxLayout.Y_AXIS));
-        outputPanel.add(Box.createRigidArea(new Dimension(50,50)));
         outputPanel.add(label1);
-        //outputPanel.add(Box.createHorizontalStrut(10));
+        Dimension minSize = new Dimension(5, 100);
+        Dimension prefSize = new Dimension(5, 100);
+        Dimension maxSize = new Dimension(Short.MAX_VALUE, 100);
+        outputPanel.add(new Box.Filler(minSize, prefSize, maxSize));
         outputPanel.add(label2);
         
         imagePanel.add(imageLabel);
@@ -131,6 +133,16 @@ public class AppInterface implements ActionListener{
         		         	    	});
         		             		if (startButton.getText().equals("Start")) {
         		             			noteIDThread.start();
+        		             			label1.setText("Play: ");
+        		                         label1.setHorizontalAlignment(SwingConstants.CENTER);
+        		                         label1.setVerticalAlignment(SwingConstants.CENTER);
+        		                         
+        		                         Prompt imageOutput = new Prompt();
+        		                         ImageIcon icon = imageOutput.ImagePrompt();
+        		                         imageLabel.setVisible(true);
+        		                         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        		                         imageLabel.setVerticalAlignment(SwingConstants.CENTER);
+        		                         imageLabel.setIcon(icon);
         		             			startButton.setText("Stop");
         		             		}
         		             		else if (startButton.getText().equals("Stop")) {
@@ -142,16 +154,6 @@ public class AppInterface implements ActionListener{
         		 						}
         		             			startButton.setText("Start");
         		             		}
-        		   
-                label1.setText("Play: ");
-                label1.setHorizontalAlignment(SwingConstants.CENTER);
-                label1.setVerticalAlignment(SwingConstants.CENTER);
-                Prompt imageOutput = new Prompt();
-                ImageIcon icon = imageOutput.ImagePrompt();
-                imageLabel.setVisible(true);
-                imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                imageLabel.setVerticalAlignment(SwingConstants.CENTER);
-                imageLabel.setIcon(icon);
      
         		}
         }
