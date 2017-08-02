@@ -1,3 +1,4 @@
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
@@ -138,21 +139,32 @@ public class SoundRecordingUtil {
         while (isRunning) {
             bytesRead = audioLine.read(buffer, 0, buffer.length);
             recordBytes.write(buffer, 0, bytesRead);
-			NoteID note = new NoteID();
-			if (StringNo == 0)
-				System.out.println("E " + tune(buffer, 82.41, 87.31, 77.78));
-			else if (StringNo == 1)
-				System.out.println("a " + tune(buffer, 110.00, 116.54, 103.83));
-			else if (StringNo == 2)
-				System.out.println("d " + tune(buffer, 146.83, 155.56, 138.59));
-			else if (StringNo == 3)
-				System.out.println("g " + tune(buffer, 196.00, 207.65, 185.00));
-			else if (StringNo == 4)
-				System.out.println("b " + tune(buffer, 246.94, 261.63, 233.08));
-			else if (StringNo == 5)
-				System.out.println("e " + tune(buffer, 329.63, 349.23, 311.13));
-					
-				
+            int max = buffer[0];
+            boolean loud = false;
+            for (int i = 0; i < buffer.length; i++) {
+            	max = Math.max(max, buffer[i]);
+            }
+            if (max > 5)
+            	loud = true;
+			//NoteID note = new NoteID();
+			if (StringNo == 0 && loud) {
+					System.out.println("E " + tune(buffer, 82.41, 87.31, 77.78));
+			}
+			else if (StringNo == 1 && loud) {
+					System.out.println("a " + tune(buffer, 110.00, 116.54, 103.83));
+			}
+			else if (StringNo == 2 && loud) {
+					System.out.println("d " + tune(buffer, 146.83, 155.56, 138.59));
+			}
+			else if (StringNo == 3 && loud) {
+					System.out.println("g " + tune(buffer, 196.00, 207.65, 185.00));
+			}
+			else if (StringNo == 4 && loud) {
+					System.out.println("b " + tune(buffer, 246.94, 261.63, 233.08));
+			}
+			else if (StringNo == 5 && loud) {
+					System.out.println("e " + tune(buffer, 329.63, 349.23, 311.13));
+			}
         }
     	
     }

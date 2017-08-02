@@ -1,4 +1,4 @@
- /* Guitar App Interface
+/* Guitar App Interface
  *  Team 9
  */
 
@@ -20,9 +20,9 @@ public class AppInterface implements ActionListener{
     JPanel utilPanel = new JPanel();
     JPanel outputPanel = new JPanel();
     JPanel imagePanel = new JPanel();
-    int mixerChoice = 0;
+    int mixerChoice = 100;
     
-    TestSoundRecordingUtil output = new TestSoundRecordingUtil();
+   // TestSoundRecordingUtil output = new TestSoundRecordingUtil();
     JButton tuneButton = new JButton("Tune");
     JButton startButton = new JButton("Start");
     
@@ -53,7 +53,7 @@ public class AppInterface implements ActionListener{
         label1 = new JLabel();
         		label1.setHorizontalAlignment(SwingConstants.CENTER);
         		label1.setVerticalAlignment(SwingConstants.CENTER);
-        	    //label1.setText("This is Label1"); // TEST
+        	     label1.setText("This is Label1");
         label2 = new JLabel();
         		Help output = new Help();
         		String labelOutput = output.getHelp();
@@ -63,24 +63,20 @@ public class AppInterface implements ActionListener{
         		Font bigFont = new Font("sansserif",Font.PLAIN,16);
         		label2.setFont(bigFont);
         	
-        ImageIcon testImage = new ImageIcon("musicNotes.png"); // TEST
-        imageLabel = new JLabel(); 
-        	imageLabel.setIcon(testImage); 
+        ImageIcon testImage = new ImageIcon("musicNotes.png");
+        imageLabel = new JLabel();
+        	imageLabel.setIcon(testImage);
     	
         // add buttons and labels to panels 
         utilPanel.add(helpButton);
         utilPanel.add(startButton);
         utilPanel.add(resetButton);
         utilPanel.add(tuneButton);
-       
+        //utilPanel.add(promptButton);
         outputPanel.setLayout(new BoxLayout(outputPanel, BoxLayout.Y_AXIS));
         outputPanel.add(label1);
-        Dimension minSize = new Dimension(5, 100);
-        Dimension prefSize = new Dimension(5, 100);
-        Dimension maxSize = new Dimension(Short.MAX_VALUE, 100);
-        outputPanel.add(new Box.Filler(minSize, prefSize, maxSize));
+        //outputPanel.add(Box.createVerticalGlue());
         outputPanel.add(label2);
-        
         imagePanel.add(imageLabel);
         
         // add panels to frame
@@ -97,8 +93,6 @@ public class AppInterface implements ActionListener{
 			buttons[i] = new JButton(i + ". "+mixerInfo[i]);
 			center.add(buttons[i]);
 			buttons[i].addActionListener(this);
-			
-			System.out.println(i + ". " + mixerInfo[i]);
 		
 		}
 		// add mixer buttons to frame
@@ -113,13 +107,13 @@ public class AppInterface implements ActionListener{
      * Action listeners respond to button events
      */
     public class StartListener implements ActionListener{
-    	    SoundRecordingUtil noteIDUtil = new SoundRecordingUtil();
+    	SoundRecordingUtil noteIDUtil = new SoundRecordingUtil();
         public void actionPerformed(ActionEvent event){
-        	if (label1.getText().equals(" ")) {
+        	if (mixerChoice == 100) {
         		label1.setText("Select a mixer to begin.");
         	} else {
         		//call record audio method
-        		 
+        		
         		             		noteIDUtil.setMixerChoice(mixerChoice);
         		             		Thread noteIDThread = new Thread(new Runnable() {
         		             			public void run() {
@@ -133,16 +127,6 @@ public class AppInterface implements ActionListener{
         		         	    	});
         		             		if (startButton.getText().equals("Start")) {
         		             			noteIDThread.start();
-        		             			label1.setText("Play: ");
-        		                         label1.setHorizontalAlignment(SwingConstants.CENTER);
-        		                         label1.setVerticalAlignment(SwingConstants.CENTER);
-        		                         
-        		                         Prompt imageOutput = new Prompt();
-        		                         ImageIcon icon = imageOutput.ImagePrompt();
-        		                         imageLabel.setVisible(true);
-        		                         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        		                         imageLabel.setVerticalAlignment(SwingConstants.CENTER);
-        		                         imageLabel.setIcon(icon);
         		             			startButton.setText("Stop");
         		             		}
         		             		else if (startButton.getText().equals("Stop")) {
@@ -154,6 +138,16 @@ public class AppInterface implements ActionListener{
         		 						}
         		             			startButton.setText("Start");
         		             		}
+        		   
+                label1.setText("Play: ");
+                label1.setHorizontalAlignment(SwingConstants.CENTER);
+                label1.setVerticalAlignment(SwingConstants.CENTER);
+                Prompt imageOutput = new Prompt();
+                ImageIcon icon = imageOutput.ImagePrompt();
+                imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                imageLabel.setVerticalAlignment(SwingConstants.CENTER);
+                imageLabel.setIcon(icon);
+            	imagePanel.add(imageLabel);
      
         		}
         }
@@ -186,31 +180,34 @@ public class AppInterface implements ActionListener{
     class TunerListener implements ActionListener {
        	SoundRecordingUtil tuner = new SoundRecordingUtil();
        	public void actionPerformed(ActionEvent event) {
-       		tuner.setMixerChoice(mixerChoice);
-       		Thread tuneThread = new Thread(new Runnable() {
-       			public void run() {
-       				tuner.runTuner();
-    	    		}
-    	    	});
-       		if (tuneButton.getText().equals("Tune")) {
-       			tuneThread.start();
-       			tuneButton.setText("Next String");
-       		}
+       		if (mixerChoice == 100)
+       			label1.setText("Select a mixer to begin.");
        		else {
-       			tuner.StringNo++;
+	       		tuner.setMixerChoice(mixerChoice);
+	       		Thread tuneThread = new Thread(new Runnable() {
+	       			public void run() {
+	       				tuner.runTuner();
+	    	    		}
+	    	    	});
+	       		if (tuneButton.getText().equals("Tune")) {
+	       			tuneThread.start();
+	       			tuneButton.setText("Next String");
+	       		}
+	       		else {
+	       			tuner.StringNo++;
+	       		}
+	       		if (tuner.StringNo > 5) {
+	    				try {
+	    					tuner.stop();
+	    				} catch (IOException e) {
+	    					e.printStackTrace();
+	    				}
+	    				tuneButton.setText("Tune");
+	    				tuner.StringNo = 0;
+	       		}
        		}
-       		if (tuner.StringNo > 5) {
-    				try {
-    					tuner.stop();
-    				} catch (IOException e) {
-    					e.printStackTrace();
-    				}
-    				tuneButton.setText("Tune");
-    				tuner.StringNo = 0;
-       		}
-       		
        	}
-       }
+    }
     
     /**
      * Get mixer choice from user
@@ -220,7 +217,7 @@ public class AppInterface implements ActionListener{
 		JButton buttonPressed = (JButton)e.getSource(); 
 		buttonPressed.setVisible(true);
 		mixerChoice = Integer.parseInt(buttonPressed.getText().substring(0,1));
-		output.recorder.setMixerChoice(mixerChoice);
+		//output.recorder.setMixerChoice(mixerChoice);
 		label1.setText(buttonPressed.getText() + " selected. Ready to record.");
 		
 		
