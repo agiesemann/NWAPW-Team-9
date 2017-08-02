@@ -1,4 +1,4 @@
- /* Guitar App Interface
+  /* Guitar App Interface
  *  Team 9
  */
 
@@ -6,6 +6,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.swing.*;
+import javax.swing.UIManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,21 +24,31 @@ public class AppInterface implements ActionListener{
     int mixerChoice = 0;
     
     TestSoundRecordingUtil output = new TestSoundRecordingUtil();
+    
     JButton tuneButton = new JButton("Tune");
     JButton startButton = new JButton("Start");
-    
 
     public static void main(String[] args) {
-        AppInterface gui = new AppInterface();
-        gui.go();
+        
+    	try {
+    	      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    	    }
+    	    catch (Exception e) {
+    	      e.printStackTrace();
+    	    }
+    	    new SplashScreenMain();
+    	    
+    	    AppInterface gui = new AppInterface();
+            gui.go();
+        
     }
  
     /**
      * Declare and initialize GUI components
      */
     public void go(){
-        
-    	frame = new JFrame("Beginning Guitarists App");
+    		
+    	frame = new JFrame("Beginning Guitar");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        
         startButton.addActionListener(new StartListener());
@@ -53,7 +64,8 @@ public class AppInterface implements ActionListener{
         label1 = new JLabel();
         		label1.setHorizontalAlignment(SwingConstants.CENTER);
         		label1.setVerticalAlignment(SwingConstants.CENTER);
-        	    //label1.setText("This is Label1"); // TEST
+        		Font medFont = new Font("sansserif", Font.PLAIN,14);
+        		label1.setFont(medFont);
         label2 = new JLabel();
         		Help output = new Help();
         		String labelOutput = output.getHelp();
@@ -75,9 +87,9 @@ public class AppInterface implements ActionListener{
        
         outputPanel.setLayout(new BoxLayout(outputPanel, BoxLayout.Y_AXIS));
         outputPanel.add(label1);
-        Dimension minSize = new Dimension(5, 100);
-        Dimension prefSize = new Dimension(5, 100);
-        Dimension maxSize = new Dimension(Short.MAX_VALUE, 100);
+        Dimension minSize = new Dimension(5, 10);
+        Dimension prefSize = new Dimension(5, 10);
+        Dimension maxSize = new Dimension(Short.MAX_VALUE, 10);
         outputPanel.add(new Box.Filler(minSize, prefSize, maxSize));
         outputPanel.add(label2);
         
@@ -103,7 +115,6 @@ public class AppInterface implements ActionListener{
 		}
 		// add mixer buttons to frame
 		frame.getContentPane().add(BorderLayout.WEST, center);
-        
         
         frame.setSize(1500, 500);
         frame.setVisible(true);
@@ -133,10 +144,11 @@ public class AppInterface implements ActionListener{
         		         	    	});
         		             		if (startButton.getText().equals("Start")) {
         		             			noteIDThread.start();
-        		             			label1.setText("Play: ");
-        		                         label1.setHorizontalAlignment(SwingConstants.CENTER);
-        		                         label1.setVerticalAlignment(SwingConstants.CENTER);
         		                         
+        		             			label1.setText("Play: ");
+               		                         label1.setHorizontalAlignment(SwingConstants.CENTER);
+               		                         label1.setVerticalAlignment(SwingConstants.CENTER);
+               		                         
         		                         Prompt imageOutput = new Prompt();
         		                         ImageIcon icon = imageOutput.ImagePrompt();
         		                         imageLabel.setVisible(true);
@@ -154,7 +166,7 @@ public class AppInterface implements ActionListener{
         		 						}
         		             			startButton.setText("Start");
         		             		}
-     
+        		             		
         		}
         }
     }
@@ -166,6 +178,7 @@ public class AppInterface implements ActionListener{
     		label1.setHorizontalAlignment(SwingConstants.CENTER);
         	label1.setVerticalAlignment(SwingConstants.CENTER);
     		imageLabel.setVisible(false);
+    		label2.setText(" ");
     	}
     }
  
@@ -208,7 +221,6 @@ public class AppInterface implements ActionListener{
     				tuneButton.setText("Tune");
     				tuner.StringNo = 0;
        		}
-       		
        	}
        }
     
@@ -226,4 +238,6 @@ public class AppInterface implements ActionListener{
 		
 	}
 }
+
+
 
