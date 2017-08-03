@@ -179,6 +179,7 @@ public class AppInterface implements ActionListener{
         				noteIDUtil.stop();
         				busy = false;
         				continueOutput = false;
+        				label1.setText("");
         			} catch (IOException e) {
         				// TODO Auto-generated catch block
         				e.printStackTrace();
@@ -259,6 +260,7 @@ public class AppInterface implements ActionListener{
 	    				tuner.stop();
 	    				busy = false;
 	    				continueTune = false;
+	    				label1.setText("");
 	    			} catch (IOException e) {
 	    				e.printStackTrace();
 	    			}
