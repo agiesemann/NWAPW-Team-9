@@ -21,8 +21,9 @@ public class SoundRecordingUtil {
     private AudioFormat format;
     private int mixNum;
     int StringNo;
+    String currentNote = "Test";
  
-    private boolean isRunning;
+    public boolean isRunning;
  
     /**
      * Defines a default audio format used to record
@@ -47,20 +48,11 @@ public class SoundRecordingUtil {
     public void start() throws LineUnavailableException {
         format = getAudioFormat();
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
- 
-        // checks if system supports the data line
         
 		
 		Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
 		
-		//boolean audioCheck = true;
-		//while (audioCheck) {
-		
 		Mixer mixer = AudioSystem.getMixer(mixerInfo[mixNum]);
-		/*if (!AudioSystem.isLineSupported(mixer.getLineInfo())) {
-            throw new LineUnavailableException(
-                    "The system does not support the specified format.");
-        }*/
 
         audioLine = (TargetDataLine)mixer.getLine(info);
         
@@ -86,10 +78,11 @@ public class SoundRecordingUtil {
 			for (int i = 0; i < buffer.length; i++) {
 				max = Math.max(buffer[i], max);
 			}
-			if (max > 10)
+			if (max > 10) {
 				System.out.println(note.noteID(buffer) + " ");
+				currentNote = note.noteID(buffer);
+			}
         }
-		
     }
     
     public void setMixerChoice(int mixerChoice){
@@ -149,24 +142,29 @@ public class SoundRecordingUtil {
 			//NoteID note = new NoteID();
 			if (StringNo == 0 && loud) {
 					System.out.println("E " + tune(buffer, 82.41, 87.31, 77.78));
+					currentNote = "Low E String " + tune(buffer, 82.41, 87.31, 77.78);
 			}
 			else if (StringNo == 1 && loud) {
 					System.out.println("a " + tune(buffer, 110.00, 116.54, 103.83));
+					currentNote = "A String " + tune(buffer, 110.00, 116.54, 103.83);
 			}
 			else if (StringNo == 2 && loud) {
 					System.out.println("d " + tune(buffer, 146.83, 155.56, 138.59));
+					currentNote = "D String " + tune(buffer, 146.83, 155.56, 138.59);
 			}
 			else if (StringNo == 3 && loud) {
 					System.out.println("g " + tune(buffer, 196.00, 207.65, 185.00));
+					currentNote = "G String " + tune(buffer, 196.00, 207.65, 185.00);
 			}
 			else if (StringNo == 4 && loud) {
 					System.out.println("b " + tune(buffer, 246.94, 261.63, 233.08));
+					currentNote = "B String " + tune(buffer, 246.94, 261.63, 233.08);
 			}
 			else if (StringNo == 5 && loud) {
 					System.out.println("e " + tune(buffer, 329.63, 349.23, 311.13));
+					currentNote = "High E String " + tune(buffer, 329.63, 349.23, 311.13);
 			}
         }
-    	
     }
 	public String tune(byte[] b, double f, double fSharp, double fFlat) {
 		byte[] tuned = new byte[(int)(44100/f)];
@@ -202,4 +200,17 @@ public class SoundRecordingUtil {
 		}
 		return max-min;
 	}	
+	public boolean testMixer(Mixer mixer) {
+		AudioFormat format = getAudioFormat();
+		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+		try {
+			mixer.getLine(info);
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			return true;
+		} catch (IllegalArgumentException ex) {
+			return true;
+		}
+		return false;
+	}
 }

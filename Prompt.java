@@ -18,7 +18,7 @@ public class Prompt {
 			ImageIcon promptImage = null;
 			Random rand = new Random();
 			ImageIcon eImage = new ImageIcon("EPos.png");
-			ImageIcon aImage = new ImageIcon("APos.png");
+			ImageIcon aImage = new ImageIcon("APosOld.png");
 			ImageIcon dImage = new ImageIcon("DPos.png");
 			ImageIcon gImage = new ImageIcon("GPos.png");
 			ImageIcon bImage = new ImageIcon("B7Pos.png");
@@ -33,5 +33,4 @@ public class Prompt {
 		}
 
 	}
-
 
