@@ -1,4 +1,4 @@
-  /* Guitar App Interface
+ /* Guitar App Interface
  *  Team 9
  */
 
@@ -7,6 +7,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.swing.*;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,7 +66,7 @@ public class AppInterface implements ActionListener{
         label1 = new JLabel();
         		label1.setHorizontalAlignment(SwingConstants.CENTER);
         		label1.setVerticalAlignment(SwingConstants.CENTER);
-        		Font medFont = new Font("sansserif", Font.PLAIN,14);
+        		Font medFont = new Font("sansserif", Font.PLAIN,20);
         		label1.setFont(medFont);
         label2 = new JLabel();
         		Help output = new Help();
@@ -86,6 +88,7 @@ public class AppInterface implements ActionListener{
         utilPanel.add(tuneButton);
        
         outputPanel.setLayout(new BoxLayout(outputPanel, BoxLayout.Y_AXIS));
+        outputPanel.setBorder(new EmptyBorder(10,10,10,10));
         outputPanel.add(label1);
         Dimension minSize = new Dimension(5, 10);
         Dimension prefSize = new Dimension(5, 10);
@@ -148,6 +151,7 @@ public class AppInterface implements ActionListener{
         		             			label1.setText("Play: ");
                		                         label1.setHorizontalAlignment(SwingConstants.CENTER);
                		                         label1.setVerticalAlignment(SwingConstants.CENTER);
+               		                label2.setText(" ");
                		                         
         		                         Prompt imageOutput = new Prompt();
         		                         ImageIcon icon = imageOutput.ImagePrompt();
@@ -238,6 +242,5 @@ public class AppInterface implements ActionListener{
 		
 	}
 }
-
 
 
