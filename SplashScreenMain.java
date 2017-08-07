@@ -30,7 +30,7 @@ public class SplashScreenMain {
   }
 
   private void splashScreenInit() {
-    ImageIcon myImage = new ImageIcon("portland-oregon-sign.jpg");
+    ImageIcon myImage = new ImageIcon("SplashScreen.jpg");
     screen = new SplashScreen(myImage);
     screen.setLocationRelativeTo(null);
     screen.setProgressMax(100);
