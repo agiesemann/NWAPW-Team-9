@@ -1,33 +1,42 @@
- /* Guitar App Interface
- *  Team 9
- */
-
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.awt.Font;
 
 public class AppInterface implements ActionListener{
 	JFrame frame;
     JLabel label1;
     JLabel label2;
+    JLabel helpLabel;
     JLabel imageLabel;
     JPanel utilPanel = new JPanel();
     JPanel outputPanel = new JPanel();
     JPanel imagePanel = new JPanel();
+    JPanel eastPanel = new JPanel();
+    JMenuBar menuBar;
+    JMenu menu;
+    JMenuItem menuItem;
+    JRadioButtonMenuItem rbMenuItem;
     Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
+    SoundRecordingUtil fretPractice = new SoundRecordingUtil();
+    SoundRecordingUtil noteIDUtil = new SoundRecordingUtil();
+    SoundRecordingUtil mixerTester = new SoundRecordingUtil();
     int mixerChoice = 100;
     boolean busy = false;
-    
+    public boolean runningRecord = false;
+    public boolean runningTimer = false;
+
+    JButton fretButton = new JButton("Start fretboard practice");
     JButton tuneButton = new JButton("Tune");
     JButton startButton = new JButton("Start note recognition program");
-    
-
+	
     public static void main(String[] args) {
     	try {
   	      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -46,74 +55,84 @@ public class AppInterface implements ActionListener{
      */
     public void go(){
         
-    	frame = new JFrame("Beginning Guitarists App");
+    	frame = new JFrame("Resonance");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+    menuBar = new JMenuBar();
+    menu = new JMenu("Mixers");
+    		menu.setMnemonic(KeyEvent.VK_A);
+    		menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
+
        
         startButton.addActionListener(new StartListener());
  
-        JButton resetButton = new JButton("Reset");
+    JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(new ResetListener());
         
-        JButton helpButton = new JButton("Help");
-        helpButton.addActionListener(new HelpListener());
-        
         tuneButton.addActionListener(new TunerListener());
+        fretButton.addActionListener(new FretListener());
  
         label1 = new JLabel();
         		label1.setHorizontalAlignment(SwingConstants.CENTER);
         		label1.setVerticalAlignment(SwingConstants.CENTER);
         		Font medFont = new Font("sansserif", Font.PLAIN,20);
+        		//label1.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
         		label1.setFont(medFont);
-        	    //label1.setText("This is Label1"); // TEST
+        	    label1.setText(""); // TEST
         label2 = new JLabel();
+        	
+        helpLabel = new JLabel();
         		Help output = new Help();
         		String labelOutput = output.getHelp();
-        		label2.setHorizontalAlignment(SwingConstants.CENTER);
-        		label2.setVerticalAlignment(SwingConstants.CENTER);
-        		label2.setText(labelOutput);
-        		Font bigFont = new Font("sansserif",Font.PLAIN,16);
-        		label2.setFont(bigFont);
+        		helpLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        		helpLabel.setVerticalAlignment(SwingConstants.CENTER);
+        		helpLabel.setText(labelOutput);
+        		Font bigFont = new Font("sansserif",Font.PLAIN,12);
+        		helpLabel.setFont(bigFont); 
         	
-        	
-        ImageIcon testImage = new ImageIcon("musicNotes.png"); // TEST
+        ImageIcon testImage = new ImageIcon("welcomeScreen1.png"); 
         imageLabel = new JLabel(); 
-        	imageLabel.setIcon(testImage); 
+        imageLabel.setIcon(testImage); 
     	
         // add buttons and labels to panels 
-        utilPanel.add(helpButton);
         utilPanel.add(startButton);
         utilPanel.add(resetButton);
         utilPanel.add(tuneButton);
+        utilPanel.add(fretButton);
        
         outputPanel.setLayout(new BoxLayout(outputPanel, BoxLayout.Y_AXIS));
         outputPanel.add(label1);
-        Dimension minSize = new Dimension(5, 100);
-        Dimension prefSize = new Dimension(5, 100);
-        Dimension maxSize = new Dimension(Short.MAX_VALUE, 100);
-        outputPanel.add(new Box.Filler(minSize, prefSize, maxSize));
-        outputPanel.add(label2);
         
+        //Dimension minSize = new Dimension(5, 50);
+        //Dimension prefSize = new Dimension(5, 50);
+       // Dimension maxSize = new Dimension(Short.MAX_VALUE, 50);
+        //outputPanel.add(new Box.Filler(minSize, prefSize, maxSize));
+        outputPanel.add(label2);
+        //outputPanel.setVgap(10);
         imagePanel.add(imageLabel);
         
+        eastPanel.add(helpLabel);
+        
         // add panels to frame
-        frame.getContentPane().add(BorderLayout.SOUTH, utilPanel);
-        frame.getContentPane().add(BorderLayout.CENTER, outputPanel);
-        frame.getContentPane().add(BorderLayout.EAST, imagePanel);
-        Container center = new Container();
+        frame.getContentPane().add(BorderLayout.NORTH, utilPanel);
+        frame.getContentPane().add(BorderLayout.SOUTH, outputPanel);
+        frame.getContentPane().add(BorderLayout.CENTER, imagePanel);
+        frame.getContentPane().add(BorderLayout.EAST, eastPanel);
         
-        // create mixer buttons
-        //Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
-		center.setLayout(new GridLayout(mixerInfo.length+1, 1));
-		JButton[] buttons = new JButton[mixerInfo.length];
-		for (int i = 0; i < mixerInfo.length; i++) {
-			buttons[i] = new JButton(i + ". "+mixerInfo[i]);
-			center.add(buttons[i]);
-			buttons[i].addActionListener(this);
-		}
-		// add mixer buttons to frame
-		frame.getContentPane().add(BorderLayout.WEST, center);
+        ButtonGroup group = new ButtonGroup();
+        JRadioButtonMenuItem []buttons = new JRadioButtonMenuItem[mixerInfo.length];
+        for (int i = 0; i < mixerInfo.length; i++) {
+        		buttons[i] = new JRadioButtonMenuItem(i + ". " + mixerInfo[i]);
+        		group.add(buttons[i]);
+        		buttons[i].setSelected(true);
+        		buttons[i].setMnemonic(KeyEvent.VK_M); //mixer
+        		
+        		buttons[i].addActionListener(this);
+        		menu.add(buttons[i]);
+        }
+        menuBar.add(menu);
         
-        
+        frame.setJMenuBar(menuBar);
         frame.setSize(1500, 500);
         frame.setVisible(true);
     }
@@ -121,8 +140,8 @@ public class AppInterface implements ActionListener{
     /**
      * Action listeners respond to button events
      */
-    public class StartListener implements ActionListener{
-    	SoundRecordingUtil noteIDUtil = new SoundRecordingUtil();
+    public class StartListener implements ActionListener {
+    	ImageTimer timer;
     	boolean continueOutput = true;
         public void actionPerformed(ActionEvent event){
         	if (busy && startButton.getText().equals("Start note recognition program")) {
@@ -153,23 +172,29 @@ public class AppInterface implements ActionListener{
         			public void run() {
         				//System.out.println(continueOutput);
         				while (continueOutput) {
-        					label1.setText("Note Detected: " + noteIDUtil.currentNote);
+        					try {
+        						if (noteIDUtil.currentNote.equalsIgnoreCase(timer.icon.toString().substring(0, 1))) {
+        							label1.setText("Note Detected: " + noteIDUtil.currentNote + " CORRECT");
+        						}
+        						else {
+        							label1.setText("Note Detected: " + noteIDUtil.currentNote + " INCORRECT");
+        						}
+        					} catch (NullPointerException ex) {
+        						ex.printStackTrace();
+        					}
         				}
         			}
         		});
         		if (startButton.getText().equals("Start note recognition program")) {
         			noteIDThread.start();
+        			timer = new ImageTimer();
         			busy = true;
         			//label1.setText("Play: ");
         			label1.setHorizontalAlignment(SwingConstants.CENTER);
         			label1.setVerticalAlignment(SwingConstants.CENTER);
         		                         
-        			Prompt imageOutput = new Prompt();
-        			ImageIcon icon = imageOutput.ImagePrompt();
-        			imageLabel.setVisible(true);
-        			imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        			imageLabel.setVerticalAlignment(SwingConstants.CENTER);
-        			imageLabel.setIcon(icon);
+        			timer.keepGoing = true;
+        			timer.start();
         			startButton.setText("Stop");
         			continueOutput = true;
         			noteIDOutput.start();
@@ -179,7 +204,9 @@ public class AppInterface implements ActionListener{
         				noteIDUtil.stop();
         				busy = false;
         				continueOutput = false;
+        				timer.keepGoing = false;
         				label1.setText("");
+        				//System.out.println(timer.isAlive());
         			} catch (IOException e) {
         				// TODO Auto-generated catch block
         				e.printStackTrace();
@@ -190,35 +217,74 @@ public class AppInterface implements ActionListener{
         	}
         }
     }
+    
+    class ImageTimer extends Thread {
+    	boolean keepGoing = true;
+    	ImageIcon icon;
+	    public void run() {
+	       while (keepGoing) {
+	           
+	       	Prompt imageOutput = new Prompt();
+			icon = imageOutput.ImagePrompt();
+			imageLabel.setVisible(true);
+			imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			imageLabel.setVerticalAlignment(SwingConstants.CENTER);
+			imageLabel.setIcon(icon);
+			try {
+	               Thread.sleep(3000);
+	           }
+	           catch (InterruptedException e) {
+	           }
+	       }
+	    }
+	}
+    
+    class FretImageTimer extends Thread {
+    	boolean keepGoing = true;
+    	ImageIcon icon;
+	    public void run() {
+	       while (keepGoing) {
+	           
+	       	Prompt imageOutput = new Prompt();
+			icon = imageOutput.FretImagePrompt();
+			imageLabel.setVisible(true);
+			imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			imageLabel.setVerticalAlignment(SwingConstants.CENTER);
+			imageLabel.setIcon(icon);
+			System.out.println(icon);
+			try {
+	               Thread.sleep(3000);
+	           }
+	           catch (InterruptedException e) {
+	           }
+	       }
+	    }
+	}
     ///////// WORK ON RESET METHOD /////////
     class ResetListener implements ActionListener{
     	public void actionPerformed(ActionEvent event){
     		//call reset method
-    		label1.setText("Cleared");
-    		label1.setHorizontalAlignment(SwingConstants.CENTER);
-        	label1.setVerticalAlignment(SwingConstants.CENTER);
-    		imageLabel.setVisible(false);
+    		if (runningRecord == true & runningTimer == true) {
+    			startButton.setText("Start note recognition program");
+    			label1.setText("Cleared");
+    			label1.setHorizontalAlignment(SwingConstants.CENTER);
+    			label1.setVerticalAlignment(SwingConstants.CENTER);
+    			imageLabel.setVisible(false);
+    			label2.setVisible(false);
+    		}
+    		runningRecord = false;
+    		runningTimer = false;
     	}
     }
- 
-    class HelpListener implements ActionListener{
-        public void actionPerformed(ActionEvent event){
-        	// call Help method
-        	label1.setText("");
-        	imageLabel.setVisible(false);
-        	Help output = new Help();
-        	String labelOutput = output.getHelp();
-        	label2.setHorizontalAlignment(SwingConstants.CENTER);
-        	label2.setVerticalAlignment(SwingConstants.CENTER);
-        	label2.setText(labelOutput);
-    
-        }
-    }
+	
     
     class TunerListener implements ActionListener {
+    	FretImageTimer timer = new FretImageTimer();
        	SoundRecordingUtil tuner = new SoundRecordingUtil();
        	boolean continueTune = true;
        	String[] notes = {"Low E String","A String","D String","G String","B String","High E String"};
+       	String[] strings = {"EString.jpg","AString.jpg","DString.jpg","GString.jpg","BString.jpg","HighEString.jpg"};
+       	
        	public void actionPerformed(ActionEvent event) {
        		if (busy && tuneButton.getText().equals("Tune")) {
        			label1.setText("Busy");
@@ -250,10 +316,17 @@ public class AppInterface implements ActionListener{
 	       			busy = true;
 	       			tuneButton.setText("Next String");
 	       			continueTune = true;
+	       			imageLabel.setVisible(true);
+	       			ImageIcon icon = new ImageIcon(strings[tuner.StringNo]);
+	       			imageLabel.setIcon(icon);
 	       			tuneOutput.start();
 	       		}
 	       		else {
 	       			tuner.StringNo++;
+	       			if (tuner.StringNo <= 5) {
+	       				ImageIcon icon = new ImageIcon(strings[tuner.StringNo]);
+	       				imageLabel.setIcon(icon);
+	       			}
 	       		}
 	       		if (tuner.StringNo > 5) {
 	    			try {
@@ -266,23 +339,107 @@ public class AppInterface implements ActionListener{
 	    			}
 	    			tuneButton.setText("Tune");
 	    			tuner.StringNo = 0;
+	    			imageLabel.setVisible(false);
 	       		}  	
        		}
        	}
     }
+    class FretListener implements ActionListener {
+    	FretImageTimer timer;
+    	boolean continueOutput = true;
+        public void actionPerformed(ActionEvent event){
+        	if (busy && fretButton.getText().equals("Start fretboard practice")) {
+        		label1.setText("Busy");
+        	}
+        	else if (mixerChoice == 100) {
+        		label1.setText("Select a mixer to begin.");
+        	}
+        	else if (noteIDUtil.testMixer(AudioSystem.getMixer(mixerInfo[mixerChoice]))) {
+        		label1.setText("Mixer not supported. Select a different mixer and try again.");
+        	}
+        	
+        	else {
+        		//call record audio method
+        		 
+        		noteIDUtil.setMixerChoice(mixerChoice);
+        		Thread noteIDThread = new Thread(new Runnable() {
+        			public void run() {
+        				try {
+        					noteIDUtil.start();
+        				} catch (LineUnavailableException e) {
+        					// TODO Auto-generated catch block
+        					e.printStackTrace();
+        				}
+        			}
+        		});
+        		Thread noteIDOutput = new Thread(new Runnable() {
+        			public void run() {
+        				//System.out.println(continueOutput);
+        				while (continueOutput) {
+        					try {
+        						if (noteIDUtil.currentNote.equalsIgnoreCase(timer.icon.toString().substring(timer.icon.toString().length()-5, timer.icon.toString().length()-4)) || noteIDUtil.currentNote.equalsIgnoreCase(timer.icon.toString().substring(timer.icon.toString().length()-6, timer.icon.toString().length()-4)))
+        							label1.setText("Note Detected: " + noteIDUtil.currentNote + "CORRECT");
+        						else
+        							label1.setText("Note Detected: " + noteIDUtil.currentNote + " INCORRECT");
+        					} catch (NullPointerException ex) {
+        						ex.printStackTrace();
+        					}
+        				}
+        			}
+        		});
+        		if (fretButton.getText().equals("Start fretboard practice")) {
+        			noteIDThread.start();
+        			imageLabel.setVisible(true);
+        			timer = new FretImageTimer();
+        			busy = true;
+        			//label1.setText("Play: ");
+        			label1.setHorizontalAlignment(SwingConstants.CENTER);
+        			label1.setVerticalAlignment(SwingConstants.CENTER);
+        		                         
+        			timer.keepGoing = true;
+        			timer.start();
+        			fretButton.setText("Stop");
+        			continueOutput = true;
+        			noteIDOutput.start();
+        		}
+        		else if (fretButton.getText().equals("Stop")) {
+        			try {
+        				noteIDUtil.stop();
+        				busy = false;
+        				continueOutput = false;
+        				timer.keepGoing = false;
+        				imageLabel.setVisible(false);
+        				label1.setText("");
+        				//System.out.println(timer.isAlive());
+        			} catch (IOException e) {
+        				// TODO Auto-generated catch block
+        				e.printStackTrace();
+        			}
+        			fretButton.setText("Start fretboard practice");
+        		}
+     
+        	}
+        }
+    }
     
-    /**
+
+	/**
      * Get mixer choice from user
      */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JButton buttonPressed = (JButton)e.getSource(); 
-		buttonPressed.setVisible(true);
-		if (!busy) {
-		mixerChoice = Integer.parseInt(buttonPressed.getText().substring(0,1));
-		label1.setText(buttonPressed.getText() + " selected. Ready to record.");
-		}
-		else
-			label1.setText("Busy");
+		//JButton buttonPressed = (JButton)e.getSource(); 
+				JRadioButtonMenuItem buttonPressed = (JRadioButtonMenuItem)e.getSource();
+				buttonPressed.setVisible(true);
+				if (!busy) {
+					mixerChoice = Integer.parseInt(buttonPressed.getText().substring(0,1));
+						if (mixerTester.testMixer(AudioSystem.getMixer(mixerInfo[mixerChoice])))
+							label1.setText("Mixer not supported. Select a different mixer");
+						else
+							label1.setText(buttonPressed.getText() + " selected. Ready to record.");
+					
+				}
+				else
+					label1.setText("Busy");
 	}
 }

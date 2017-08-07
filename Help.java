@@ -7,7 +7,7 @@ public class Help {
 	public String getHelp() {
 		String helpInfo = "<html>Welcome to the Beginning Guitar App<BR>"
 				+ "<BR>"
-				+ "1. Choose a mixer by clicking one of the buttons on the left. <BR>"
+				+ "1. Choose a mixer (where your guitar/mic is plugged in) by clicking one of the buttons on the left. <BR>"
 				+ "<BR>"
 				+ "2. To record sound, click \"Start note recognition program\" and play a note.<BR>"
 				+ "<BR>"
