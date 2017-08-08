@@ -1,4 +1,4 @@
-import javax.sound.sampled.AudioSystem;
+port javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.swing.*;
@@ -13,9 +13,9 @@ import java.io.IOException;
 public class AppInterface implements ActionListener{
 	JFrame frame;
     JLabel label1;
-    JLabel label2;
     JLabel helpLabel;
     JLabel imageLabel;
+    JLabel waveformLabel;
     JPanel utilPanel = new JPanel();
     JPanel outputPanel = new JPanel();
     JPanel imagePanel = new JPanel();
@@ -33,9 +33,10 @@ public class AppInterface implements ActionListener{
     public boolean runningRecord = false;
     public boolean runningTimer = false;
 
+    FlowLayout experimentLayout = new FlowLayout();
     JButton fretButton = new JButton("Start fretboard practice");
     JButton tuneButton = new JButton("Tune");
-    JButton startButton = new JButton("Start note recognition program");
+    JButton startButton = new JButton("Start note recognition");
 	
     public static void main(String[] args) {
     	try {
@@ -65,27 +66,20 @@ public class AppInterface implements ActionListener{
 
        
         startButton.addActionListener(new StartListener());
- 
-    JButton resetButton = new JButton("Reset");
-        resetButton.addActionListener(new ResetListener());
-        
         tuneButton.addActionListener(new TunerListener());
         fretButton.addActionListener(new FretListener());
  
         label1 = new JLabel();
-        		label1.setHorizontalAlignment(SwingConstants.CENTER);
-        		label1.setVerticalAlignment(SwingConstants.CENTER);
+        		label1.setHorizontalTextPosition(SwingConstants.LEADING);;
+        		label1.setVerticalAlignment(SwingConstants.TOP);
         		Font medFont = new Font("sansserif", Font.PLAIN,20);
-        		//label1.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
         		label1.setFont(medFont);
-        	    label1.setText(""); // TEST
-        label2 = new JLabel();
+        	    label1.setText("");
         	
         helpLabel = new JLabel();
         		Help output = new Help();
         		String labelOutput = output.getHelp();
         		helpLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        		helpLabel.setVerticalAlignment(SwingConstants.CENTER);
         		helpLabel.setText(labelOutput);
         		Font bigFont = new Font("sansserif",Font.PLAIN,12);
         		helpLabel.setFont(bigFont); 
@@ -93,24 +87,17 @@ public class AppInterface implements ActionListener{
         ImageIcon testImage = new ImageIcon("welcomeScreen1.png"); 
         imageLabel = new JLabel(); 
         imageLabel.setIcon(testImage); 
+        
     	
         // add buttons and labels to panels 
         utilPanel.add(startButton);
-        utilPanel.add(resetButton);
         utilPanel.add(tuneButton);
         utilPanel.add(fretButton);
        
         outputPanel.setLayout(new BoxLayout(outputPanel, BoxLayout.Y_AXIS));
         outputPanel.add(label1);
         
-        //Dimension minSize = new Dimension(5, 50);
-        //Dimension prefSize = new Dimension(5, 50);
-       // Dimension maxSize = new Dimension(Short.MAX_VALUE, 50);
-        //outputPanel.add(new Box.Filler(minSize, prefSize, maxSize));
-        outputPanel.add(label2);
-        //outputPanel.setVgap(10);
         imagePanel.add(imageLabel);
-        
         eastPanel.add(helpLabel);
         
         // add panels to frame
@@ -141,10 +128,10 @@ public class AppInterface implements ActionListener{
      * Action listeners respond to button events
      */
     public class StartListener implements ActionListener {
-    	ImageTimer timer;
-    	boolean continueOutput = true;
+    		ImageTimer timer;
+    		boolean continueOutput = true;
         public void actionPerformed(ActionEvent event){
-        	if (busy && startButton.getText().equals("Start note recognition program")) {
+        	if (busy && startButton.getText().equals("Start note recognition")) {
         		label1.setText("Busy");
         	}
         	else if (mixerChoice == 100) {
@@ -185,11 +172,11 @@ public class AppInterface implements ActionListener{
         				}
         			}
         		});
-        		if (startButton.getText().equals("Start note recognition program")) {
+        		if (startButton.getText().equals("Start note recognition")) {
         			noteIDThread.start();
+        			imageLabel.setVisible(true);
         			timer = new ImageTimer();
         			busy = true;
-        			//label1.setText("Play: ");
         			label1.setHorizontalAlignment(SwingConstants.CENTER);
         			label1.setVerticalAlignment(SwingConstants.CENTER);
         		                         
@@ -205,6 +192,7 @@ public class AppInterface implements ActionListener{
         				busy = false;
         				continueOutput = false;
         				timer.keepGoing = false;
+        				imageLabel.setVisible(false);
         				label1.setText("");
         				//System.out.println(timer.isAlive());
         			} catch (IOException e) {
@@ -260,37 +248,20 @@ public class AppInterface implements ActionListener{
 	       }
 	    }
 	}
-    ///////// WORK ON RESET METHOD /////////
-    class ResetListener implements ActionListener{
-    	public void actionPerformed(ActionEvent event){
-    		//call reset method
-    		if (runningRecord == true & runningTimer == true) {
-    			startButton.setText("Start note recognition program");
-    			label1.setText("Cleared");
-    			label1.setHorizontalAlignment(SwingConstants.CENTER);
-    			label1.setVerticalAlignment(SwingConstants.CENTER);
-    			imageLabel.setVisible(false);
-    			label2.setVisible(false);
-    		}
-    		runningRecord = false;
-    		runningTimer = false;
-    	}
-    }
-	
     
     class TunerListener implements ActionListener {
     	FretImageTimer timer = new FretImageTimer();
        	SoundRecordingUtil tuner = new SoundRecordingUtil();
        	boolean continueTune = true;
        	String[] notes = {"Low E String","A String","D String","G String","B String","High E String"};
-       	String[] strings = {"EString.jpg","AString.jpg","DString.jpg","GString.jpg","BString.jpg","HighEString.jpg"};
+       	String[] strings = {"EString.png","AString.png","DString.png","GString.png","BString.png","HighEString.png"};
        	
        	public void actionPerformed(ActionEvent event) {
        		if (busy && tuneButton.getText().equals("Tune")) {
        			label1.setText("Busy");
        		}
        		else if (mixerChoice == 100) {
-       			label1.setText("Select a mixer");
+       			label1.setText("Select a mixer to begin.");
        		}
        		else if (tuner.testMixer(AudioSystem.getMixer(mixerInfo[mixerChoice]))) {
         		label1.setText("Mixer not supported. Select a different mixer and try again.");
@@ -442,4 +413,5 @@ public class AppInterface implements ActionListener{
 				else
 					label1.setText("Busy");
 	}
+}
 }
