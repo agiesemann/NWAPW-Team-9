@@ -1,4 +1,4 @@
-  import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.swing.*;
@@ -210,7 +210,7 @@ public class AppInterface implements ActionListener{
         				// TODO Auto-generated catch block
         				e.printStackTrace();
         			}
-        			startButton.setText("Start note recognition program");
+        			startButton.setText("Start note recognition");
         		}
      
         	}
