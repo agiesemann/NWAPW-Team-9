@@ -63,17 +63,16 @@ public class AppInterface implements ActionListener{
     menu = new JMenu("Mixers");
     		menu.setMnemonic(KeyEvent.VK_A);
     		menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
-
        
         startButton.addActionListener(new StartListener());
         tuneButton.addActionListener(new TunerListener());
         fretButton.addActionListener(new FretListener());
  
         label1 = new JLabel();
-        		label1.setHorizontalTextPosition(SwingConstants.CENTER);;
-        		label1.setVerticalAlignment(SwingConstants.TOP);
-        		Font medFont = new Font("sansserif", Font.PLAIN,20);
-        		label1.setFont(medFont);
+        		label1.setHorizontalAlignment(SwingConstants.CENTER);;
+        		label1.setVerticalAlignment(SwingConstants.CENTER);
+        		Font bigFont = new Font("sansserif", Font.PLAIN,22);
+        		label1.setFont(bigFont);
         	    label1.setText("");
         	
         helpLabel = new JLabel();
@@ -81,11 +80,12 @@ public class AppInterface implements ActionListener{
         		String labelOutput = output.getHelp();
         		helpLabel.setHorizontalAlignment(SwingConstants.LEFT);
         		helpLabel.setText(labelOutput);
-        		Font bigFont = new Font("sansserif",Font.PLAIN,12);
-        		helpLabel.setFont(bigFont); 
+        		Font medFont = new Font("sansserif",Font.PLAIN,12);
+        		helpLabel.setFont(medFont); 
         	
         ImageIcon testImage = new ImageIcon("welcomeScreen1.png"); 
         imageLabel = new JLabel(); 
+        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         imageLabel.setIcon(testImage); 
         
     		ImageIcon waveformImage = new ImageIcon("hbvFL.png");
@@ -115,6 +115,7 @@ public class AppInterface implements ActionListener{
         //frame.getContentPane().add(BorderLayout.SOUTH, outputPanel);
         frame.getContentPane().add(BorderLayout.CENTER, imagePanel);
         frame.getContentPane().add(BorderLayout.EAST, eastPanel);
+        frame.add(new JSeparator(), BorderLayout.SOUTH);
         
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem []buttons = new JRadioButtonMenuItem[mixerInfo.length];
