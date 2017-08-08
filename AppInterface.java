@@ -67,7 +67,7 @@ public class AppInterface implements ActionListener{
         startButton.addActionListener(new StartListener());
         tuneButton.addActionListener(new TunerListener());
         fretButton.addActionListener(new FretListener());
- 
+        
         label1 = new JLabel();
         		label1.setHorizontalAlignment(SwingConstants.CENTER);;
         		label1.setVerticalAlignment(SwingConstants.CENTER);
@@ -75,14 +75,27 @@ public class AppInterface implements ActionListener{
         		label1.setFont(bigFont);
         	    label1.setText("");
         	
-        helpLabel = new JLabel();
+       helpLabel = new JLabel();
         		Help output = new Help();
         		String labelOutput = output.getHelp();
         		helpLabel.setHorizontalAlignment(SwingConstants.LEFT);
         		helpLabel.setText(labelOutput);
         		Font medFont = new Font("sansserif",Font.PLAIN,12);
         		helpLabel.setFont(medFont); 
-        	
+        		
+        		JScrollPane helpScrollPane = new JScrollPane(helpLabel);
+        			//helpScrollPane.add(helpLabel);
+                helpScrollPane.setVerticalScrollBarPolicy(
+                                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                helpScrollPane.setPreferredSize(new Dimension(250, 250));
+                helpScrollPane.setPreferredSize(new Dimension(250, 250));
+                helpScrollPane.setBorder(
+                    BorderFactory.createCompoundBorder(
+                        BorderFactory.createCompoundBorder(
+                                        BorderFactory.createTitledBorder("Welcome to Resonance"),
+                                        BorderFactory.createEmptyBorder(5,5,5,5)),
+                        helpScrollPane.getBorder()));
+                
         ImageIcon testImage = new ImageIcon("welcomeScreen1.png"); 
         imageLabel = new JLabel(); 
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -109,7 +122,7 @@ public class AppInterface implements ActionListener{
         eastPanel.setLayout(new GridLayout(2,1));
         //eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
         eastPanel.add(waveformLabel);
-        eastPanel.add(helpLabel);
+        eastPanel.add(helpScrollPane);
         
         // add panels to frame
         frame.getContentPane().add(BorderLayout.NORTH, utilPanel);
