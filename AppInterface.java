@@ -86,6 +86,7 @@ public class AppInterface implements ActionListener{
         ImageIcon testImage = new ImageIcon("welcomeScreen1.png"); 
         imageLabel = new JLabel(); 
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        imageLabel.setVerticalAlignment(SwingConstants.CENTER);
         imageLabel.setIcon(testImage); 
         
     		ImageIcon waveformImage = new ImageIcon("hbvFL.png");
@@ -132,7 +133,7 @@ public class AppInterface implements ActionListener{
         
         outputPanel.add(new JSeparator(), BorderLayout.SOUTH);
         frame.setJMenuBar(menuBar);
-        frame.setSize(1500, 900);
+        frame.setSize(1500, 1000);
         frame.setVisible(true);
     }
  
