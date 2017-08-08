@@ -79,7 +79,7 @@ public class AppInterface implements ActionListener{
         helpLabel = new JLabel();
         		Help output = new Help();
         		String labelOutput = output.getHelp();
-        		helpLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        		helpLabel.setHorizontalAlignment(SwingConstants.LEFT);
         		helpLabel.setText(labelOutput);
         		Font bigFont = new Font("sansserif",Font.PLAIN,12);
         		helpLabel.setFont(bigFont); 
