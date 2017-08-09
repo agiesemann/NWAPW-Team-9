@@ -1,3 +1,8 @@
+/* Splash Screen 
+ * Resonance
+ * NWAPW 2017 - Team 9
+ */ 
+
 import javax.swing.*;
 import java.awt.*;
 
