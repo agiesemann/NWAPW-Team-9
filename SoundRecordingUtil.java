@@ -22,6 +22,7 @@ public class SoundRecordingUtil {
     private int mixNum;
     int StringNo;
     String currentNote = "";
+    byte[] output = new byte[BUFFER_SIZE];
  
     public boolean isRunning;
  
@@ -34,8 +35,7 @@ public class SoundRecordingUtil {
         int channels = 1;
         boolean signed = true;
         boolean bigEndian = true;
-        return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed,
-                bigEndian);
+        return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
     }
  
     /**
@@ -77,6 +77,7 @@ public class SoundRecordingUtil {
 			int max = 0;
 			for (int i = 0; i < buffer.length; i++) {
 				max = Math.max(buffer[i], max);
+				output[i] = buffer[i];
 			}
 			if (max > 5) {
 				//System.out.println(note.noteID(buffer) + " ");
@@ -136,6 +137,7 @@ public class SoundRecordingUtil {
             boolean loud = false;
             for (int i = 0; i < buffer.length; i++) {
             	max = Math.max(max, buffer[i]);
+            	output[i] = buffer[i];
             }
             if (max > 5)
             	loud = true;

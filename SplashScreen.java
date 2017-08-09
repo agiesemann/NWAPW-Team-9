@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+@SuppressWarnings("serial")
 public class SplashScreen extends JWindow {
   BorderLayout borderLayout1 = new BorderLayout();
   JLabel imageLabel = new JLabel();

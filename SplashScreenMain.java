@@ -1,5 +1,3 @@
-import javax.swing.UIManager;
-
 import javax.swing.ImageIcon;
 
 public class SplashScreenMain {
@@ -15,7 +13,8 @@ public class SplashScreenMain {
     {
       for (long j=0; j<50000; ++j)
       {
-        String load = " " + (j + i);
+        @SuppressWarnings("unused")
+		String load = " " + (j + i);
       }
       // run either of these two -- not both
       screen.setProgress("Hello " + i, i);  // progress bar with a message
@@ -30,7 +29,7 @@ public class SplashScreenMain {
   }
 
   private void splashScreenInit() {
-    ImageIcon myImage = new ImageIcon("SplashScreen.jpg");
+    ImageIcon myImage = new ImageIcon("portland-oregon-sign.jpg");
     screen = new SplashScreen(myImage);
     screen.setLocationRelativeTo(null);
     screen.setProgressMax(100);
