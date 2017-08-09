@@ -2,19 +2,12 @@ import java.util.*;
 import javax.swing.ImageIcon;
 
 public class Prompt {
-
-		public String Prompter(){
-			Random rand = new Random();
-			String prompt;
-			String[] note = {"A","B","C","D","E","F","G"};
-			
-			int noteIndex = rand.nextInt(note.length);
-			prompt = note[noteIndex];
-			
-			return prompt;	
-			
-		}
 		
+		
+		/**
+		 * Picks a random image out of an array of available images. Each image represents a note
+		 * @return an ImageIcon containing the randomly selected image.
+		 */
 		public ImageIcon ImagePrompt(){
 			ImageIcon promptImage = null;
 			Random rand = new Random();
@@ -36,6 +29,10 @@ public class Prompt {
 			return promptImage;
 			
 		}
+		/**
+		 * Picks a random image out of an array of available image. Each image represents a position on the fretboard.
+		 * @return an ImageIcon containing the randomly selected image.
+		 */
 		public ImageIcon FretImagePrompt() {
 			ImageIcon promptImage = null;
 			Random rand = new Random();
