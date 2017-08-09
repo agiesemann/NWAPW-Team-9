@@ -78,7 +78,6 @@ public class SoundRecordingUtil {
 				output[i] = buffer[i];
 			}
 			if (max > 5) {
-				//System.out.println(note.noteID(buffer) + " ");
 				currentNote = note.noteID(buffer);
 			}
         }
