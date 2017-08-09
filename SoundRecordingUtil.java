@@ -37,14 +37,12 @@ public class SoundRecordingUtil {
         boolean bigEndian = true;
         return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
     }
- 
+
     /**
-     * Start recording sound.
-     * @throws LineUnavailableException if the system does not support the specified
-     * audio format nor open the audio data line.
+     * Sets up an audio line and writes the incoming data into a buffer array of bytes.
+     * The String currentNote is assigned a value depending on what is returned by the noteID method.
+     * @throws LineUnavailableException
      */
-    
-    
     public void start() throws LineUnavailableException {
         format = getAudioFormat();
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -86,6 +84,10 @@ public class SoundRecordingUtil {
         }
     }
     
+    /**
+     * Setter method that assigns a value to mixNum which is used to determine mixer choice
+     * @param mixerChoice
+     */
     public void setMixerChoice(int mixerChoice){
 		mixNum = mixerChoice;
 	}
@@ -104,7 +106,11 @@ public class SoundRecordingUtil {
         }
 		
     }
-    
+    /**
+     * Sets up an audio line and writes incoming data into a buffer array of bytes.
+     * Depending on the int StringNo, the data in the buffer are compared against 
+     * a specific frequency.
+     */
     public void runTuner() {
     	format = getAudioFormat();
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -141,34 +147,36 @@ public class SoundRecordingUtil {
             }
             if (max > 5)
             	loud = true;
-			//NoteID note = new NoteID();
 			if (StringNo == 0 && loud) {
-					//System.out.println("E " + tune(buffer, 82.41, 87.31, 77.78));
 					currentNote = tune(buffer, 82.41, 87.31, 77.78);
 			}
 			else if (StringNo == 1 && loud) {
-					//System.out.println("a " + tune(buffer, 110.00, 116.54, 103.83));
 					currentNote = tune(buffer, 110.00, 116.54, 103.83);
 			}
 			else if (StringNo == 2 && loud) {
-					//System.out.println("d " + tune(buffer, 146.83, 155.56, 138.59));
 					currentNote = tune(buffer, 146.83, 155.56, 138.59);
 			}
 			else if (StringNo == 3 && loud) {
-					//System.out.println("g " + tune(buffer, 196.00, 207.65, 185.00));
 					currentNote = tune(buffer, 196.00, 207.65, 185.00);
 			}
 			else if (StringNo == 4 && loud) {
-					//System.out.println("b " + tune(buffer, 246.94, 261.63, 233.08));
 					currentNote = tune(buffer, 246.94, 261.63, 233.08);
 			}
 			else if (StringNo == 5 && loud) {
-					//System.out.println("e " + tune(buffer, 329.63, 349.23, 311.13));
 					currentNote = tune(buffer, 329.63, 349.23, 311.13);
 			}
         }
     }
     
+    /**
+     * Determines whether an incoming byte array contains a similar frequency to the
+     * target frequency. It returns whether the frequency is lower or higher than the target.
+     * @param b The byte array with the incoming data
+     * @param f The target frequency
+     * @param fSharp The frequency that is a half step above the target
+     * @param fFlat The frequency that is a half step below the target
+     * @return A String stating whether the incoming frequency is in tune, sharp, or flat compared to the target
+     */
 	public String tune(byte[] b, double f, double fSharp, double fFlat) {
 		byte[] tuned = new byte[(int)(44100/f)];
 		byte[] flat = new byte[(int)(44100/fFlat)];
@@ -186,6 +194,13 @@ public class SoundRecordingUtil {
 			return "too high";
 		return "";
 	}
+	/**
+	 * Fills an empty byte array with the data from a larger one and returns 
+	 * the difference between the maximum and minimum values in the newly filled array.
+	 * @param a The byte array to be filled (data are added, not overwritten)
+	 * @param b The larger byte array to be written into the smaller one
+	 * @return The difference between the largest and smallest value in the small array
+	 */
 	public int fillAndMaxMinDiff(byte[] a, byte[] b) {
 		int max = a[0];
 		int min = a[0];
@@ -203,6 +218,12 @@ public class SoundRecordingUtil {
 		}
 		return max-min;
 	}	
+	
+	/**
+	 * Tests mixer to determine if it is available
+	 * @param mixer The mixer being tested
+	 * @return true if mixer is not available, false if mixer is available
+	 */
 	public boolean testMixer(Mixer mixer) {
 		AudioFormat format = getAudioFormat();
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);

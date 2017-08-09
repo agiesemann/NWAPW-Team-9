@@ -1,10 +1,9 @@
 public class NoteID {
 
 	/**
-	 *Determine whether correct note is played
-	 *@param f The target frequency(Hz)
-	 *@param b The byte array to be analyzed
-	 *@param s The sample rate of the byte array
+	 * Determines which note is contained in the byte array
+	 * @param b The byte array to be analyzed
+	 * @return String that states which note was played
 	 */
 	public String noteID (byte[] b) {
 		int[] diff = new int[12];
@@ -52,6 +51,13 @@ public class NoteID {
 		}
 		return n[maxIndex];
 	}
+	/**
+	 * Fills an empty byte array with the data from a larger one and returns 
+	 * the difference between the maximum and minimum values in the newly filled array.
+	 * @param a The byte array to be filled (data are added, not overwritten)
+	 * @param b The larger byte array to be written into the smaller one
+	 * @return The difference between the largest and smallest value in the small array
+	 */
 	public int fillAndMaxMinDiff(byte[] a, byte[] b) {
 		int max = a[0];
 		int min = a[0];
