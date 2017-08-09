@@ -445,7 +445,7 @@ public class AppInterface implements ActionListener{
         				while (continueOutput) {
         					try {
         						if (noteIDUtil.currentNote.equalsIgnoreCase(timer.icon.toString().substring(timer.icon.toString().length()-5, timer.icon.toString().length()-4)) || noteIDUtil.currentNote.equalsIgnoreCase(timer.icon.toString().substring(timer.icon.toString().length()-6, timer.icon.toString().length()-4)))
-        							label1.setText("Note Detected: " + noteIDUtil.currentNote + "CORRECT");
+        							label1.setText("Note Detected: " + noteIDUtil.currentNote + " CORRECT");
         						else
         							label1.setText("Note Detected: " + noteIDUtil.currentNote + " INCORRECT");
         					} catch (NullPointerException ex) {
