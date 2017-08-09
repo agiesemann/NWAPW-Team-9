@@ -1,2 +1,3 @@
 # NWAPW-Team-9
-Beginner Guitar App
+Resonance
+Guitar Practice App
