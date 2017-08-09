@@ -1,3 +1,8 @@
+/* Splash Screen Main
+ * Resonance
+ * NWAPW 2017 - Team 9
+ */
+
 import javax.swing.ImageIcon;
 
 public class SplashScreenMain {
