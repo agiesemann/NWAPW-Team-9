@@ -95,7 +95,7 @@ public class AppInterface implements ActionListener{
         		String labelOutput = output.getHelp();
         		helpLabel.setHorizontalAlignment(SwingConstants.LEFT);
         		helpLabel.setText(labelOutput);
-        		Font medFont = new Font("sansserif",Font.PLAIN,12);
+        		Font medFont = new Font("sansserif",Font.PLAIN,14);
         		helpLabel.setFont(medFont); 
         		
         		// Help scroll pane
